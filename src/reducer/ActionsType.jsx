@@ -1,0 +1,7 @@
+export const ADD_AUDIT = 'ADD_AUDIT';
+export const SET_AUDITEUR = 'SET_AUDITEUR';
+export const DELETE_AUDIT = 'DELETE_AUDIT';
+export const ADD_AUDIT_BY_LOCALSTORAGE = 'ADD_AUDIT_BY_LOCALSTORAGE';
+export const SET_AUDIT = 'SET_AUDIT';
+export const SET_VALUE_MENU_STATUS = 'SET_VALUE_MENU_STATUS';
+export const EDIT_AUDIT = 'EDIT_AUDIT';

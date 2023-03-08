@@ -1,0 +1,31 @@
+ .main-progressbar {
+     display: flex;
+     align-items: center;
+     justify-items: center;
+ }
+
+ .progressbar {
+     width: 100%;
+ }
+
+ .container-card {
+     display: flex;
+     flex-direction: row;
+     padding: 3%;
+     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+     margin-right: 20px;
+     margin-bottom: 20px;
+     align-items: center;
+ }
+
+ .audit-btn, .delete, .edit {
+    cursor: pointer;
+ }
+
+ .row-card{
+    margin-right: 5px;
+ }
+
+ .category{
+   margin-right: 13px;
+ }
