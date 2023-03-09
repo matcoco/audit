@@ -1,4 +1,4 @@
-import React, { useReducer} from "react"
+import React, { useReducer } from "react"
 import { Routes, Route } from "react-router-dom";
 import AuditName from "./Components/AuditName";
 import Home from "./Components/Home";
@@ -21,8 +21,8 @@ function App() {
   return (
     <myContext.Provider value={{ state, dispatch, getLocalStorage }}>
       <Routes>
-        <Route path="/home" element={<Home />} />
         <Route path="/" element={<AuditName />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/:gbook" element={<FormSelectAudit />} />
       </Routes>
     </myContext.Provider>
