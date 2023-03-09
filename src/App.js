@@ -6,9 +6,9 @@ import { myContext } from './context/Context'
 import { initialState, reducer } from './reducer/reducer';
 import './App.css'
 import FormSelectAudit from "./Components/Form";
-
+const uri = process.env.REACT_APP_ADDRESS;
 function App() {
-
+  
   const getLocalStorage = () => {
     if (JSON.parse(localStorage.getItem("datas")) !== null) {
       return JSON.parse(localStorage.getItem("datas"))
@@ -21,9 +21,9 @@ function App() {
   return (
     <myContext.Provider value={{ state, dispatch, getLocalStorage }}>
       <Routes>
-        <Route path="/audit" element={<AuditName />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/:gbook" element={<FormSelectAudit />} />
+        <Route path={uri +"/audit"} element={<AuditName />} />
+        <Route path={uri + "/home"} element={<Home />} />
+        <Route path={uri +"/:gbook"} element={<FormSelectAudit />} />
       </Routes>
     </myContext.Provider>
   )
