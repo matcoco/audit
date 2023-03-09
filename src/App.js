@@ -21,7 +21,7 @@ function App() {
   return (
     <myContext.Provider value={{ state, dispatch, getLocalStorage }}>
       <Routes>
-        <Route path="/" element={<AuditName />} />
+        <Route path="/audit" element={<AuditName />} />
         <Route path="/home" element={<Home />} />
         <Route path="/:gbook" element={<FormSelectAudit />} />
       </Routes>
