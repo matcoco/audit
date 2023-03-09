@@ -2,7 +2,7 @@
   "name": "audit_test",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://matcoco.github.io/#audit/",
+  "homepage": "https://matcoco.github.io/audit#/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
