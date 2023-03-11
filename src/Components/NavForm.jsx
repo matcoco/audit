@@ -5,12 +5,10 @@ import { AiFillHome } from "react-icons/ai";
 
 
 const NavForm = () => {
-
-    const host = window.location.host
     return (
         <Nav>
             <Nav.Item>
-                <Nav.Link href={host + "/home"}>
+                <Nav.Link href={"/"}>
                     <IconContext.Provider value={{ color: "black", size: 40 }}>
                         <AiFillHome  />
                     </IconContext.Provider>
