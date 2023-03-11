@@ -6,6 +6,9 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { SET_AUDITEUR } from '../reducer/ActionsType'
 import { useNavigate } from "react-router-dom";
+import 'react-toastify/dist/ReactToastify.min.css';
+import { toast } from "react-toastify"
+import { ToastContainer } from 'react-toastify';
 
 const AuditName = () => {
     const [formAudit, setFormAudit] = useState({
@@ -25,12 +28,18 @@ const AuditName = () => {
     const navigatePage = () => navigate("/home");
 
     const submit = () => {
-        let newState = [...state]
-        newState[0]['auditeur'] = formAudit.auditeur
-        newState[0]['demandeur'] = formAudit.demandeur
+        if (formAudit.auditeur !== "" && formAudit.demandeur !== "") {
+            let newState = [...state]
+            newState[0]['auditeur'] = formAudit.auditeur
+            newState[0]['demandeur'] = formAudit.demandeur
 
-        dispatch({ type: SET_AUDITEUR, payload: newState })
-        navigatePage()
+            dispatch({ type: SET_AUDITEUR, payload: newState })
+            navigatePage()
+        } else {
+            console.log("xouxou")
+            toast.error("merci de saisir les champs!", { closeOnClick: true, autoClose: 2000, })
+        }
+
     }
 
     return (
@@ -70,6 +79,7 @@ const AuditName = () => {
                 </Col>
             </Row>
             <Button variant="outline-primary" onClick={submit}>Valider</Button>
+            <ToastContainer />
         </div>
     )
 }
