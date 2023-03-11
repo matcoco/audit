@@ -16,7 +16,7 @@ const EditCard = ({ showEditCard, handleClose, data }) => {
     useEffect(() => {
         setGbook(gbook => data.gbook)
         setIsEcom(isEcom => data.isEcom)
-    }, [])
+    }, [data])
 
     const onChange = (event) => {
         setGbook(event.target.value)

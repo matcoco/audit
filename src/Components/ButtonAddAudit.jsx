@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -47,28 +47,29 @@ const ButtonAddAudit = () => {
       } else {
         toast.error("produit déjà présent dans la liste", { closeOnClick: true, autoClose: 2000, })
       }
-    }else{
+    } else {
       toast.error("merci de saisir un gbook valide!", { closeOnClick: true, autoClose: 2000, })
     }
   };
 
-  useEffect(() => {
-    verifyUniqueGbook()
-  }, [gbook])
+
 
   useEffect(() => {
     inputRef.current && inputRef.current.focus()
   }, [inputRef])
 
-  const verifyUniqueGbook = () => {
+  const verifyUniqueGbook = useCallback(() => {
     let arrayGbook = []
     for (let item of state[0].datas) {
       arrayGbook.push(item.gbook)
     }
-
     if (!arrayGbook.includes(gbook)) return true
     else return false
-  }
+  }, [gbook, state])
+
+  useEffect(() => {
+    verifyUniqueGbook()
+  }, [gbook, verifyUniqueGbook])
 
   return (
     <>

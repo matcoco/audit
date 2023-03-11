@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useMemo } from 'react';
+import React, { useContext, useEffect, useState, useMemo, useCallback } from 'react';
 import { myContext } from "../context/Context"
 import ButtonAddAudit from './ButtonAddAudit';
 import Cards from './Cards';
@@ -14,16 +14,21 @@ const Home = () => {
   const [dataFilter, setDataFilter] = useState("")
   const [auditeur, setauditeur] = useState("")
   const [demandeur, setDemandeur] = useState("")
- 
+
+  const dispatch_ADD_AUDIT = useCallback(() => {
+    dispatch({ type: ADD_AUDIT_BY_LOCALSTORAGE, payload: getLocalStorage() })
+  }, [dispatch, getLocalStorage])
+
+  const dispatch_SET_VALUE_MENU_STATUS = useCallback(() => {
+    dispatch({ type: SET_VALUE_MENU_STATUS, payload: dataFilter })
+  }, [dataFilter, dispatch])
+
 
   useEffect(() => {
-    if (data.length === 0 && getLocalStorage().length !== 0) {
-      dispatch({ type: ADD_AUDIT_BY_LOCALSTORAGE, payload: getLocalStorage() })
-    }
-
-    let obj = { a : "coucou"}
-    console.log(obj?.b ?? "prout")
+    dispatch_ADD_AUDIT()
+    // eslint-disable-next-line
   }, [])
+
 
   useEffect(() => {
     setData(state[0].datas)
@@ -34,19 +39,16 @@ const Home = () => {
 
   useEffect(() => {
     if (dataFilter !== "") {
-      dispatch({ type: SET_VALUE_MENU_STATUS, payload: dataFilter })
+      dispatch_SET_VALUE_MENU_STATUS()
     }
 
-  }, [dataFilter])
+  }, [dataFilter, dispatch_SET_VALUE_MENU_STATUS])
 
   const deleteCard = (gbook) => {
     dispatch({ type: DELETE_AUDIT, payload: gbook })
     toast.info("produit supprimé !", { closeOnClick: true, autoClose: 2000, })
   }
 
-  const editCard = (gbook) => {
-    
-  }
 
   const filter = (event) => {
     let value = +event.target.value
@@ -75,12 +77,11 @@ const Home = () => {
       </div>
       <div className='main-cards-audit'>
         {
-          filteredList && filteredList
-            .map((item, index) => {
-              return (
-                <Cards key={index} data={item} deleteCard={deleteCard} editCard={editCard}/>
-              )
-            })
+          filteredList.map((item, index) => {
+            return (
+              <Cards key={index} data={item} deleteCard={deleteCard} />
+            )
+          })
         }
       </div>
       <div>

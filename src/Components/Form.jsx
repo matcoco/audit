@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback, useMemo } from "react";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form';
@@ -20,9 +20,12 @@ const FormSelectAudit = () => {
     const { state, dispatch, getLocalStorage } = useContext(myContext);
     const arrayInput = [1]
     const arraySelectNotAuditBtoB = []
-    const arrayLabelForm = [
-        "Demande de PC de la cage", "Numéro de série du produit", "Numéro de série conforme à DARRS ?"
-    ]
+
+    const arrayLabelForm_memo = () => {
+        return ["Demande de PC de la cage", "Numéro de série du produit", "Numéro de série conforme à DARRS ?"]
+    }
+
+    const arrayLabelForm = useMemo(arrayLabelForm_memo, [])
 
 
     const handleChange = (event) => {
@@ -31,70 +34,7 @@ const FormSelectAudit = () => {
         setFormEl({ ...form_el, [property]: value })
     }
 
-    useEffect(() => {
-        if (getLocalStorage().length !== 0) {
-            dispatch({ type: ADD_AUDIT_BY_LOCALSTORAGE, payload: getLocalStorage() })
-        }
-    }, [])
-
-    useEffect(() => {
-        findCurrentAudit(state)
-    }, [state])
-
-    useEffect(() => {
-        saveFormIntoCurrentAudit()
-        if (currentAudit.audit !== undefined) {
-            if (Object.keys(currentAudit.audit).length) {
-                dispatch({ type: SET_AUDIT, payload: { obj: currentAudit, gbook: gbook } })
-            }
-        }
-
-    }, [form_el])
-
-    const findCurrentAudit = (locale) => {
-        for (let item of locale[0].datas) {
-            if (item.gbook === gbook) {
-                setCurrentAudit(item)
-                setSaveLocale(item)
-                if (item.hasOwnProperty('audit')) {
-                    setFormEl(item.audit)
-                } else {
-                    setFormEl({})
-                }
-            }
-        }
-    }
-
-
-    const saveFormIntoCurrentAudit = () => {
-        let audit = saveLocale
-        audit['audit'] = form_el
-        let results = calculProgressBar()
-        audit['progress'] = results[0]
-        audit['status'] = results[1]
-        audit[`dateFinAudit`] = results[0] === 100 ? moment().format('DD/MM/YYYY') : ""
-        setProgressBar(results[0])
-        setCurrentAudit(currentAudit => currentAudit, audit)
-    }
-
-
-    const calculProgressBar = () => {
-        let numLabelForm = arrayLabelForm.length
-        let numFormFill = Object.keys(form_el).length
-        let calcul = 0
-
-        let fieldEmpty = 0
-        for (let item in form_el) {
-            if (form_el[item] === "") {
-                fieldEmpty++
-            }
-        }
-        numFormFill -= fieldEmpty
-        calcul = Math.round((numFormFill / numLabelForm) * 100)
-        return [calcul, verificationDoneConformeOrNot(calcul)]
-    }
-
-    const verificationDoneConformeOrNot = (calcul) => {
+    const verificationDoneConformeOrNot = useCallback((calcul) => {
         let arrayValueForm = []
         if (calcul >= 100) {
             for (let item in form_el) {
@@ -108,7 +48,81 @@ const FormSelectAudit = () => {
         } else {
             return 1
         }
-    }
+    }, [form_el])
+
+    const findCurrentAudit_func = useCallback((locale) => {
+        for (let item of locale[0].datas) {
+            if (item.gbook === gbook) {
+                setCurrentAudit(item)
+                setSaveLocale(item)
+                if (item.hasOwnProperty('audit')) {
+                    setFormEl(item.audit)
+                } else {
+                    setFormEl({})
+                }
+            }
+        }
+    }, [gbook])
+
+    const calculProgressBar = useCallback(() => {
+        let numLabelForm = arrayLabelForm?.length
+        let numFormFill = Object.keys(form_el).length
+        let calcul = 0
+
+        let fieldEmpty = 0
+        for (let item in form_el) {
+            if (form_el[item] === "") {
+                fieldEmpty++
+            }
+        }
+        numFormFill -= fieldEmpty
+        calcul = Math.round((numFormFill / numLabelForm) * 100)
+        return [calcul, verificationDoneConformeOrNot(calcul)]
+
+    }, [arrayLabelForm, form_el, verificationDoneConformeOrNot])
+
+    const saveFormIntoCurrentAudit = useCallback(() => {
+        let audit = saveLocale
+        audit['audit'] = form_el
+        let results = calculProgressBar()
+        audit['progress'] = results[0]
+        audit['status'] = results[1]
+        audit[`dateFinAudit`] = results[0] === 100 ? moment().format('DD/MM/YYYY') : ""
+        setProgressBar(results[0])
+        setCurrentAudit(currentAudit => currentAudit, audit)
+    }, [form_el, saveLocale, calculProgressBar])
+
+    const dispatch_ADD_AUDIT = useCallback(() => {
+        dispatch({ type: ADD_AUDIT_BY_LOCALSTORAGE, payload: getLocalStorage() })
+    }, [dispatch, getLocalStorage])
+
+    const dispatch_SET_AUDIT = useCallback(() => {
+        dispatch({ type: SET_AUDIT, payload: { obj: currentAudit, gbook: gbook } })
+    }, [dispatch, gbook, currentAudit])
+
+    useEffect(() => {
+        dispatch_ADD_AUDIT()
+        // eslint-disable-next-line
+    }, [])
+
+    useEffect(() => {
+        findCurrentAudit_func(state)
+    }, [state, findCurrentAudit_func])
+
+
+
+
+
+    useEffect(() => {
+        saveFormIntoCurrentAudit()
+        if (currentAudit.audit !== undefined) {
+            if (Object.keys(currentAudit.audit).length) {
+                dispatch_SET_AUDIT()
+            }
+        }
+
+    }, [form_el, currentAudit, dispatch_SET_AUDIT, saveFormIntoCurrentAudit])
+
 
 
     return (

@@ -6,7 +6,7 @@ import { myContext } from './context/Context'
 import { initialState, reducer } from './reducer/reducer';
 import './App.css'
 import FormSelectAudit from "./Components/Form";
-const uri = process.env.REACT_APP_ADDRESS;
+
 function App() {
   
   const getLocalStorage = () => {
@@ -21,9 +21,9 @@ function App() {
   return (
     <myContext.Provider value={{ state, dispatch, getLocalStorage }}>
       <Routes>
-        <Route path={uri +"/audit"} element={<AuditName />} />
-        <Route path={uri + "/home"} element={<Home />} />
-        <Route path={uri +"/:gbook"} element={<FormSelectAudit />} />
+        <Route path="/" exact element={<AuditName />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/:gbook" element={<FormSelectAudit />} />
       </Routes>
     </myContext.Provider>
   )

@@ -8,7 +8,6 @@ import { AiFillDelete, AiOutlineCheck, AiOutlineClose, AiFillEdit } from "react-
 import { IconContext } from 'react-icons'
 import Button from 'react-bootstrap/Button';
 import EditCard from "./EditCard";
-const uri = process.env.REACT_APP_ADDRESS;
 
 
 const Cards = ({ data, deleteCard, editCard }) => {
@@ -31,7 +30,7 @@ const Cards = ({ data, deleteCard, editCard }) => {
         default:
             break;
     }
-    const navigatePage = () => navigate(`${uri}/${data.gbook}`);
+    const navigatePage = () => navigate(`/${data.gbook}`);
     return (
         <div className={`container-card ${color}`}>
             <Row className="row-card" style={{ width: '25rem' }}>
