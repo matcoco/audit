@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/Button';
 import EditCard from "./EditCard";
 
 
-const Cards = ({ data, deleteCard, editCard }) => {
+const Cards = ({ data, deleteCard }) => {
     const [showEditCard, setShowEditCard] = useState(false);
 
     const handleClose = () => setShowEditCard(false);

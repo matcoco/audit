@@ -30,7 +30,7 @@ const EditCard = ({ showEditCard, handleClose, data }) => {
     const verifyUniqueGbook = () => {
         let arrayGbook = []
         for (let item of state[0].datas) {
-          arrayGbook.push(item.gbook)
+            if(gbook !== item.gbook) arrayGbook.push(item.gbook)
         }
     
         if (!arrayGbook.includes(gbook)) return true
