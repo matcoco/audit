@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { myContext } from "../context/Context"
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -15,7 +15,7 @@ const AuditName = () => {
         "auditeur": "",
         "demandeur": ""
     })
-    const { state, dispatch } = useContext(myContext)
+    const { state, dispatch, getLocalStorage } = useContext(myContext)
     let navigate = useNavigate();
     const arrayAuditeur = ["Mathieu G", "Samir M"]
     const arrayDemandeur = ["Lauris M", "Djamel S", "Pascal C"]
@@ -25,18 +25,29 @@ const AuditName = () => {
         setFormAudit({ ...formAudit, [name]: value })
     }
 
+    useEffect(() => {
+        let stateLocal = getLocalStorage()
+        console.log(stateLocal)
+        if(stateLocal.length > 0){
+            if(stateLocal[0]?.auditeur !== "" && stateLocal[0]?.demandeur !== ""){
+                navigatePage()
+            }
+        }
+        // eslint-disable-next-line
+    }, [])
+
     const navigatePage = () => navigate("/home");
 
     const submit = () => {
         if (formAudit.auditeur !== "" && formAudit.demandeur !== "") {
             let newState = [...state]
+            console.log(state)
             newState[0]['auditeur'] = formAudit.auditeur
             newState[0]['demandeur'] = formAudit.demandeur
 
             dispatch({ type: SET_AUDITEUR, payload: newState })
             navigatePage()
         } else {
-            console.log("xouxou")
             toast.error("merci de saisir les champs!", { closeOnClick: true, autoClose: 2000, })
         }
 
@@ -52,7 +63,7 @@ const AuditName = () => {
                     <Form.Select aria-label="filtre" className='main-select-filter' onChange={handleChange} name="auditeur">
                         <option value={""} ></option>
                         {
-                            arrayAuditeur.map((item, index) => {
+                           arrayAuditeur.map((item, index) => {
                                 return (
                                     <option key={index} value={item} >{item}</option>
                                 )

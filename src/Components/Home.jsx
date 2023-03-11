@@ -7,6 +7,7 @@ import Filter from './Filter';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { toast } from "react-toastify"
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const { state, dispatch, getLocalStorage } = useContext(myContext)
@@ -14,6 +15,7 @@ const Home = () => {
   const [dataFilter, setDataFilter] = useState("")
   const [auditeur, setauditeur] = useState("")
   const [demandeur, setDemandeur] = useState("")
+  const navigate = useNavigate()
 
   const dispatch_ADD_AUDIT = useCallback(() => {
     dispatch({ type: ADD_AUDIT_BY_LOCALSTORAGE, payload: getLocalStorage() })
@@ -25,7 +27,17 @@ const Home = () => {
 
 
   useEffect(() => {
-    dispatch_ADD_AUDIT()
+    let stateLocal = getLocalStorage()
+    console.log(stateLocal)
+    if(stateLocal.length === 0){
+      navigate("/")
+    }else{
+      dispatch_ADD_AUDIT()
+    }
+
+    
+    
+   
     // eslint-disable-next-line
   }, [])
 
