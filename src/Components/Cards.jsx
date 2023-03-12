@@ -33,7 +33,7 @@ const Cards = ({ data, deleteCard }) => {
     const navigatePage = () => navigate(`/${data.gbook}`);
     return (
         <div className={`container-card ${color}`}>
-            <Row className="row-card" style={{ width: '25rem' }}>
+            <Row className="first-card" style={{ width: '17rem' }}>
                 <Col>
                     <div><h2>{data.gbook}</h2></div>
                     <div className="d-flex align-items-center">
@@ -54,26 +54,26 @@ const Cards = ({ data, deleteCard }) => {
                     <ProgressBarComp data={data} />
                 </Col>
             </Row>
-            <Row className="row-card">
+            <Col className="second-card">
                 <Col className="container-audit-btn">
                     <Button variant="outline-primary audit-btn" onClick={() => navigatePage()}>AUDITER</Button>
                 </Col>
-            </Row>
+                <Col className="btn-func">
+                    <div className="edit">
+                        <IconContext.Provider value={{ color: "orange", size: 20 }}>
+                            <AiFillEdit onClick={() => handleShow()} />
+                        </IconContext.Provider>
+                    </div>
+                    <div className="delete">
+                        <IconContext.Provider className="delete" value={{ color: "red", size: 20 }}>
+                            <AiFillDelete onClick={() => deleteCard(data.gbook)} />
+                        </IconContext.Provider>
+                    </div>
+                </Col>
+            </Col>
 
-            <Row className="row-card">
-                <Col className="edit">
-                    <IconContext.Provider value={{ color: "orange", size: 20 }}>
-                        <AiFillEdit onClick={() => handleShow()} />
-                    </IconContext.Provider>
-                </Col>
-            </Row>
-            <Row className="row-card">
-                <Col className="delete">
-                    <IconContext.Provider value={{ color: "red", size: 20 }}>
-                        <AiFillDelete onClick={() => deleteCard(data.gbook)} />
-                    </IconContext.Provider>
-                </Col>
-            </Row>
+
+
             <EditCard data={data} showEditCard={showEditCard} handleClose={handleClose} />
         </div>
     )

@@ -10,12 +10,12 @@
 
  .container-card {
      display: flex;
-     flex-direction: row;
-     padding: 3%;
+     padding: 1.5%;
      box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
      margin-right: 20px;
      margin-bottom: 20px;
      align-items: center;
+     width: 400px;
  }
 
  .audit-btn, .delete, .edit {
@@ -28,4 +28,26 @@
 
  .category{
    margin-right: 13px;
+ }
+
+ .main-cards-audit{
+    display: flex;
+    flex-wrap: wrap;
+ }
+
+ .main-items{
+    display: flex;
+    flex-direction: column;
+ }
+
+ .second-card{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+ }
+
+ .btn-func{
+    display: flex;
+    justify-content: space-evenly;
+    width: -webkit-fill-available;
  }

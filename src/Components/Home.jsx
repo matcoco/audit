@@ -10,6 +10,7 @@ import { toast } from "react-toastify"
 import { useNavigate } from 'react-router-dom';
 import Chart from './Chart';
 import "./Home.css"
+import { Container } from 'react-bootstrap';
 
 const Home = () => {
   const { state, dispatch, getLocalStorage } = useContext(myContext)
@@ -91,7 +92,7 @@ const Home = () => {
   var filteredList = useMemo(getFilteredList, [dataFilter, data]);
 
   return (
-    <div className="App">
+    <Container className="App">
       <div className='main-header'>
         <div>
           <p><span>Auditeur : </span><span>{auditeur}</span></p>
@@ -102,22 +103,23 @@ const Home = () => {
           <Chart auditCount={auditCount} />
         </div>
       </div>
-      <div className='main-filter'>
-        <Filter filter={filter} dataFilter={dataFilter} />
+      <div className='main-items'>
+        <div className='main-filter'>
+          <Filter filter={filter} dataFilter={dataFilter} />
+        </div>
+        <div className='main-cards-audit'>
+          {
+            filteredList.map((item, index) => {
+              return (
+                <Cards key={index} data={item} deleteCard={deleteCard} />
+              )
+            })
+          }
+        </div>
       </div>
-      <div className='main-cards-audit'>
-        {
-          filteredList.map((item, index) => {
-            return (
-              <Cards key={index} data={item} deleteCard={deleteCard} />
-            )
-          })
-        }
-      </div>
-      <div>
-      </div>
+
       <ToastContainer />
-    </div>
+    </Container>
 
   );
 }
