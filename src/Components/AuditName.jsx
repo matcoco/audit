@@ -27,7 +27,6 @@ const AuditName = () => {
 
     useEffect(() => {
         let stateLocal = getLocalStorage()
-        console.log(stateLocal)
         if(stateLocal.length > 0){
             if(stateLocal[0]?.auditeur !== "" && stateLocal[0]?.demandeur !== ""){
                 navigatePage()

@@ -8,6 +8,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { toast } from "react-toastify"
 import { useNavigate } from 'react-router-dom';
+import Chart from './Chart';
+import "./Home.css"
 
 const Home = () => {
   const { state, dispatch, getLocalStorage } = useContext(myContext)
@@ -15,6 +17,7 @@ const Home = () => {
   const [dataFilter, setDataFilter] = useState("")
   const [auditeur, setauditeur] = useState("")
   const [demandeur, setDemandeur] = useState("")
+  const [auditCount, setAuditCount] = useState([])
   const navigate = useNavigate()
 
   const dispatch_ADD_AUDIT = useCallback(() => {
@@ -28,26 +31,39 @@ const Home = () => {
 
   useEffect(() => {
     let stateLocal = getLocalStorage()
-    console.log(stateLocal)
-    if(stateLocal.length === 0){
+    if (stateLocal.length === 0) {
       navigate("/")
-    }else{
+    } else {
       dispatch_ADD_AUDIT()
     }
-
-    
-    
-   
     // eslint-disable-next-line
   }, [])
 
+  const countStatusAudit = useCallback(() => {
+    let arrayStatusCount = [0, 0, 0]
+
+    for (let item of state[0].datas) {
+      if (item.status === 1) {
+        arrayStatusCount[0] += 1
+      }
+      if (item.status === 2) {
+        arrayStatusCount[1] += 1
+      }
+      if (item.status === 3) {
+        arrayStatusCount[2] += 1
+      }
+    }
+
+    setAuditCount(auditCount => arrayStatusCount)
+  }, [state,])
 
   useEffect(() => {
     setData(state[0].datas)
     setDataFilter(dataFilter => state[0].valueStatusMenu)
     setauditeur(auditeur => state[0].auditeur)
     setDemandeur(demandeur => state[0].demandeur)
-  }, [state, data])
+    countStatusAudit()
+  }, [state, data, countStatusAudit])
 
   useEffect(() => {
     if (dataFilter !== "") {
@@ -80,9 +96,11 @@ const Home = () => {
         <div>
           <p><span>Auditeur : </span><span>{auditeur}</span></p>
           <p><span>Demandé par : </span><span>{demandeur}</span></p>
+          <div className='main-Btn-add-audit'><ButtonAddAudit /></div>
         </div>
-        <div className='main-Btn-add-audit'><ButtonAddAudit /></div>
-        <div></div>
+        <div style={{ width: '355px' }}>
+          <Chart auditCount={auditCount} />
+        </div>
       </div>
       <div className='main-filter'>
         <Filter filter={filter} dataFilter={dataFilter} />
