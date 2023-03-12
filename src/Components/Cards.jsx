@@ -4,10 +4,10 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import './styleCards.css';
 import { useNavigate } from "react-router-dom";
-import { AiFillDelete, AiOutlineCheck, AiOutlineClose, AiFillEdit } from "react-icons/ai";
+import { AiFillDelete, AiOutlineCheck, AiOutlineClose, AiFillEdit, AiOutlineMinus } from "react-icons/ai";
 import { IconContext } from 'react-icons'
-import Button from 'react-bootstrap/Button';
 import EditCard from "./EditCard";
+import Button from 'react-bootstrap/Button';
 
 
 const Cards = ({ data, deleteCard }) => {
@@ -28,11 +28,15 @@ const Cards = ({ data, deleteCard }) => {
             break;
 
         default:
+            color = "blue"
             break;
     }
     const navigatePage = () => navigate(`/${data.gbook}`);
     return (
         <div className={`container-card ${color}`}>
+
+
+
             <Row className="first-card" style={{ width: '17rem' }}>
                 <Col>
                     <div><h2>{data.gbook}</h2></div>
@@ -46,15 +50,15 @@ const Cards = ({ data, deleteCard }) => {
                                     <AiOutlineCheck /> :
                                     <AiOutlineClose />}
                             </IconContext.Provider>
-                        </div> : ""}
+                        </div> :
+                            <IconContext.Provider value={{ color: color, size: 30 }}>
+                                    <AiOutlineMinus />
+                            </IconContext.Provider>}
                     </div>
 
                 </Col>
-                <Col className="main-progressbar">
-                    <ProgressBarComp data={data} />
-                </Col>
             </Row>
-            <Col className="second-card">
+            <Row className="second-card">
                 <Col className="container-audit-btn">
                     <Button variant="outline-primary audit-btn" onClick={() => navigatePage()}>AUDITER</Button>
                 </Col>
@@ -70,8 +74,12 @@ const Cards = ({ data, deleteCard }) => {
                         </IconContext.Provider>
                     </div>
                 </Col>
-            </Col>
-
+            </Row>
+            <Row>
+                <Col className="main-progressbar">
+                    <ProgressBarComp data={data} />
+                </Col>
+            </Row>
 
 
             <EditCard data={data} showEditCard={showEditCard} handleClose={handleClose} />

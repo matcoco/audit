@@ -110,14 +110,27 @@ const Home = () => {
         <div className='main-cards-audit'>
           {
             filteredList.map((item, index) => {
-              return (
-                <Cards key={index} data={item} deleteCard={deleteCard} />
-              )
+              if (filteredList.length === 0) {
+                return (
+                  <>
+                    <img src={'https://img.freepik.com/premium-vector/no-data-concept-illustration_86047-485.jpg?w=360'} alt='no data' />
+                  </>
+
+                )
+              } else {
+                return (
+                  <Cards key={index} data={item} deleteCard={deleteCard} />
+                )
+              }
+
             })
           }
+          {/*           {
+            filteredList.length === 0 ? <img src={'/no-data.png'} alt='picture no data'/> :
+          } */}
         </div>
       </div>
-
+      {filteredList.length === 0 ?<div className="pic-no-data"><img  src={'https://t4.ftcdn.net/jpg/04/75/01/23/360_F_475012363_aNqXx8CrsoTfJP5KCf1rERd6G50K0hXw.jpg'} alt='no data' /></div>  : ""}
       <ToastContainer />
     </Container>
 

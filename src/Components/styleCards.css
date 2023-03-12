@@ -1,4 +1,4 @@
- .main-progressbar {
+/*  .main-progressbar {
      display: flex;
      align-items: center;
      justify-items: center;
@@ -8,19 +8,9 @@
      width: 100%;
  }
 
- .container-card {
-     display: flex;
-     padding: 1.5%;
-     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-     margin-right: 20px;
-     margin-bottom: 20px;
-     align-items: center;
-     width: 400px;
- }
 
- .audit-btn, .delete, .edit {
-    cursor: pointer;
- }
+
+
 
  .row-card{
     margin-right: 5px;
@@ -30,10 +20,7 @@
    margin-right: 13px;
  }
 
- .main-cards-audit{
-    display: flex;
-    flex-wrap: wrap;
- }
+
 
  .main-items{
     display: flex;
@@ -46,8 +33,38 @@
     align-items: center;
  }
 
- .btn-func{
+*/
+
+.container-card {
+    /*   display: flex; */
+    padding: 1.5%;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    /*     margin-right: 20px;
+    margin-bottom: 20px; */
+    align-items: center;
+    width: 400px;
+}
+
+.main-cards-audit {
     display: flex;
-    justify-content: space-evenly;
-    width: -webkit-fill-available;
- }
+    flex-wrap: wrap;
+}
+
+.btn-func {
+    display: flex;
+}
+
+.audit-btn,
+.delete,
+.edit {
+    cursor: pointer;
+}
+
+.edit {
+    margin-right: 25px;
+}
+
+.main-card{
+    display: flex;
+    justify-content: space-around;
+}

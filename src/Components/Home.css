@@ -2,3 +2,12 @@
     display: flex;
     justify-content: space-between; 
 }
+
+.pic-no-data{
+    display: flex;
+    justify-content: center;
+}
+
+.pic-no-data img{
+    width: 150px;
+}
