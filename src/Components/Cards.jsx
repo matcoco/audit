@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import ProgressBarComp from "./ProgressBarComp";
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import './styleCards.css';
 import { useNavigate } from "react-router-dom";
 import { AiFillDelete, AiOutlineCheck, AiOutlineClose, AiFillEdit, AiOutlineMinus } from "react-icons/ai";
@@ -21,67 +18,44 @@ const Cards = ({ data, deleteCard }) => {
 
     switch (data.status) {
         case 3:
-            color = "red"
+            color = "rgba(255, 99, 132, 1)"
             break;
         case 2:
-            color = "green"
+            color = "rgba(75, 192, 192, 1)"
             break;
 
         default:
-            color = "blue"
+            color = "rgba(54, 162, 235, 1)"
             break;
     }
     const navigatePage = () => navigate(`/${data.gbook}`);
     return (
         <div className={`container-card ${color}`}>
-
-
-
-            <Row className="first-card" style={{ width: '17rem' }}>
-                <Col>
-                    <div><h2>{data.gbook}</h2></div>
-                    <div className="d-flex align-items-center">
-                        <div className="category">
-                            <p>{data.category}</p>
-                        </div>
-                        {data.status !== 1 ? <div>
-                            <IconContext.Provider value={{ color: color, size: 30 }}>
-                                {data.status === 2 ?
-                                    <AiOutlineCheck /> :
-                                    <AiOutlineClose />}
+            <div className="main-first-card">
+                <div className="first-card">
+                    <h2>{data.gbook}</h2>
+                    <p>{data.category}</p>
+                </div>
+                <div className="middle-card"><h2>{data.progress}%</h2></div>
+                <div className="end-card">
+                    <div>
+                        <Button variant="outline-primary audit-btn" onClick={() => navigatePage()}>AUDITER</Button>
+                    </div>
+                    <div className="btn-func">
+                        <div className="edit">
+                            <IconContext.Provider value={{ color: "orange", size: 20 }}>
+                                <AiFillEdit onClick={() => handleShow()} />
                             </IconContext.Provider>
-                        </div> :
-                            <IconContext.Provider value={{ color: color, size: 30 }}>
-                                    <AiOutlineMinus />
-                            </IconContext.Provider>}
+                        </div>
+                        <div className="delete">
+                            <IconContext.Provider className="delete" value={{ color: "red", size: 20 }}>
+                                <AiFillDelete onClick={() => deleteCard(data.gbook)} />
+                            </IconContext.Provider>
+                        </div>
                     </div>
-
-                </Col>
-            </Row>
-            <Row className="second-card">
-                <Col className="container-audit-btn">
-                    <Button variant="outline-primary audit-btn" onClick={() => navigatePage()}>AUDITER</Button>
-                </Col>
-                <Col className="btn-func">
-                    <div className="edit">
-                        <IconContext.Provider value={{ color: "orange", size: 20 }}>
-                            <AiFillEdit onClick={() => handleShow()} />
-                        </IconContext.Provider>
-                    </div>
-                    <div className="delete">
-                        <IconContext.Provider className="delete" value={{ color: "red", size: 20 }}>
-                            <AiFillDelete onClick={() => deleteCard(data.gbook)} />
-                        </IconContext.Provider>
-                    </div>
-                </Col>
-            </Row>
-            <Row>
-                <Col className="main-progressbar">
-                    <ProgressBarComp data={data} />
-                </Col>
-            </Row>
-
-
+                </div>
+            </div>
+            <div style={{ backgroundColor: color, width: "20px", height: "100%" }}></div>
             <EditCard data={data} showEditCard={showEditCard} handleClose={handleClose} />
         </div>
     )

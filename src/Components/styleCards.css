@@ -36,13 +36,11 @@
 */
 
 .container-card {
-    /*   display: flex; */
-    padding: 1.5%;
+    display: flex;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-    /*     margin-right: 20px;
-    margin-bottom: 20px; */
-    align-items: center;
+    justify-content: center;
     width: 400px;
+    margin-right: 20px;
 }
 
 .main-cards-audit {
@@ -50,8 +48,8 @@
     flex-wrap: wrap;
 }
 
-.btn-func {
-    display: flex;
+.btn-func{
+    margin-left: 5px ;
 }
 
 .audit-btn,
@@ -64,7 +62,20 @@
     margin-right: 25px;
 }
 
-.main-card{
+.main-card {
     display: flex;
+    justify-content: space-around;
+}
+
+.end-card {
+    display: flex;
+}
+
+
+.main-first-card {
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    width: 100%;
     justify-content: space-around;
 }
