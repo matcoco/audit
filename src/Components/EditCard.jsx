@@ -42,6 +42,19 @@ const EditCard = ({ showEditCard, handleClose, data }) => {
         setStyleAudit(styleAudit => data.category)
     }, [data])
 
+    useEffect(() => {
+        let v_data = {
+            "auditeur": data.auditeur,
+            "demandeur": data.demandeur
+        }
+        if (showEditCard) {
+            setGbook(gbook => data.gbook)
+            setDatas(datas => v_data)
+            setStyleAudit(styleAudit => data.category)
+        }
+ 
+    }, [showEditCard])
+
     const onChange = (event) => {
         setGbook(event.target.value)
     }
@@ -66,7 +79,7 @@ const EditCard = ({ showEditCard, handleClose, data }) => {
 
     const handleChangeBtnRadio = (event) => {
         setStyleAudit(styleAudit => event.target.id)
-      }
+    }
 
     const submit = () => {
         if (gbook !== "") {
@@ -154,7 +167,7 @@ const EditCard = ({ showEditCard, handleClose, data }) => {
                                         id={item.id}
                                         onChange={handleChangeBtnRadio}
                                         checked={item.id === styleAudit}
-                            
+
                                     />
                                 )
                             })
