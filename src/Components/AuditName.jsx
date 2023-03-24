@@ -40,7 +40,6 @@ const AuditName = () => {
     const submit = () => {
         if (formAudit.auditeur !== "" && formAudit.demandeur !== "") {
             let newState = [...state]
-            console.log(state)
             newState[0]['auditeur'] = formAudit.auditeur
             newState[0]['demandeur'] = formAudit.demandeur
 

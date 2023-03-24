@@ -23,24 +23,12 @@ const EditCard = ({ showEditCard, handleClose, data }) => {
     const [styleAudit, setStyleAudit] = useState("")
 
     useEffect(() => {
-        console.log(data)
         setCheckBoxAudit(state[0].checkboxAudit)
         setAuditeur(state[0].auditeur)
         setDemandeur(state[0].demandeur)
         // eslint-disable-next-line
     }, [])
 
-    useEffect(() => {
-
-        let v_data = {
-            "auditeur": data.auditeur,
-            "demandeur": data.demandeur
-        }
-        console.log(data)
-        setGbook(gbook => data.gbook)
-        setDatas(datas => v_data)
-        setStyleAudit(styleAudit => data.category)
-    }, [data])
 
     useEffect(() => {
         let v_data = {
@@ -52,8 +40,8 @@ const EditCard = ({ showEditCard, handleClose, data }) => {
             setDatas(datas => v_data)
             setStyleAudit(styleAudit => data.category)
         }
- 
-    }, [showEditCard])
+
+    }, [showEditCard, data])
 
     const onChange = (event) => {
         setGbook(event.target.value)
@@ -85,18 +73,12 @@ const EditCard = ({ showEditCard, handleClose, data }) => {
         if (gbook !== "") {
             if (verifyUniqueGbook()) {
                 let newState = { ...data }
-                let v_data = {
-                    gbook,
-                    category: data.category,
-                    startAudit: data.startAudit,
-                    progress: data.progress,
-                    status: data.status,
-                    dateDebutAudit: data.dateDebutAudit,
-                    dateFinAudit: data.dateFinAudit,
-                    demandeur: datas.demandeur,
-                    auditeur: datas.auditeur
-                }
+
                 newState.gbook = gbook
+                newState.category = styleAudit
+                newState.demandeur = datas.demandeur
+                newState.auditeur = datas.auditeur
+
 
                 handleClose()
                 dispatch({ type: EDIT_AUDIT, payload: { newState, lastGbook: data.gbook } })
