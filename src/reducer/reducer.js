@@ -10,10 +10,26 @@ import {
 
 export const initialState = [
   {
-    "auditeur": "",
-    "demandeur": "",
+    "auditeur": ["Mathieu G", "Samir M"],
+    "demandeur": ["Lauris M", "Djamel S", "Pascal C"],
     "valueStatusMenu": "",
-    "datas": []
+    "datas": [],
+    "forms": {
+      "prod": [
+        { name: 'serieRam', label: 'Numéro de série RAM', type: 'text' },
+        { name: 'aspectExt', label: 'Aspect extérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
+        { name: 'aspectInt', label: 'Aspect intérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
+      ],
+      "btob": [
+        { name: 'aspectExt', label: 'Aspect extérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
+        { name: 'aspectInt', label: 'Aspect intérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
+      ]
+    },
+    "checkboxAudit": [
+      { label: 'ecom', name: 'group1', type: 'radio', id: "ecom" },
+      { label: 'btob', name: 'group1', type: 'radio', id: "btob" },
+      { label: 'prod', name: 'group1', type: 'radio', id: "prod" }
+    ]
   }
 ];
 

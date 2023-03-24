@@ -6,7 +6,8 @@ import { myContext } from "../context/Context"
 import { ADD_AUDIT } from '../reducer/ActionsType';
 import * as moment from 'moment'
 import { toast } from "react-toastify"
-
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 
 
@@ -14,36 +15,51 @@ const ButtonAddAudit = () => {
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
-  const [isEcom, setIsEcom] = useState(false)
+  const [styleAudit, setStyleAudit] = useState("")
   const inputRef = React.createRef();
-  const [gbook, setGbook] = useState("")
+  const [gbook, setGbook] = useState({})
   const { state, dispatch } = useContext(myContext)
+  const [checkboxAudit, setCheckBoxAudit] = useState([])
+  const [auditeur, setAuditeur] = useState([])
+  const [demandeur, setDemandeur] = useState([])
+  const [datas, setDatas] = useState({
+    "auditeur": "",
+    "demandeur": ""
+  })
 
   const onChange = (event) => {
     setGbook(event.target.value);
   };
 
-  const onChangeSwitchEcom = (event) => {
-    setIsEcom(event.target.checked);
-
+  const onChangeDatas = (event) => {
+    setDatas({
+      ...datas,
+      [event.target.name]: event.target.value
+    });
   };
+
+  const handleChangeBtnRadio = (event) => {
+    setStyleAudit(styleAudit => event.target.id)
+  }
+
+
 
   const submit = () => {
     if (gbook !== "") {
       if (verifyUniqueGbook()) {
-        let datas = {
+        let data = {
           gbook,
-          category: isEcom === true ? "audit E-com" : "audit B to B",
+          category: styleAudit,
           startAudit: false,
-          isEcom: isEcom,
           progress: 0,
           status: 1,
           dateDebutAudit: moment().format('DD/MM/YYYY'),
-          dateFinAudit: ""
+          dateFinAudit: "",
+          demandeur: datas.demandeur,
+          auditeur: datas.auditeur
         }
-        setIsEcom(false)
         handleClose()
-        dispatch({ type: ADD_AUDIT, payload: datas })
+        dispatch({ type: ADD_AUDIT, payload: data })
       } else {
         toast.error("produit déjà présent dans la liste", { closeOnClick: true, autoClose: 2000, })
       }
@@ -53,6 +69,12 @@ const ButtonAddAudit = () => {
   };
 
 
+  useEffect(() => {
+    setCheckBoxAudit(state[0].checkboxAudit)
+    setAuditeur(state[0].auditeur)
+    setDemandeur(state[0].demandeur)
+    // eslint-disable-next-line
+  }, [])
 
   useEffect(() => {
     inputRef.current && inputRef.current.focus()
@@ -71,6 +93,7 @@ const ButtonAddAudit = () => {
     verifyUniqueGbook()
   }, [gbook, verifyUniqueGbook])
 
+
   return (
     <>
       <div>
@@ -82,20 +105,61 @@ const ButtonAddAudit = () => {
             <Modal.Title>Nouvel audit</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-
+            <div>
+              <Row>
+                <Col>
+                  <Form.Label>Auditeur</Form.Label>
+                </Col>
+                <Col>
+                  <Form.Select aria-label="filtre" className='main-select-filter' onChange={onChangeDatas} name="auditeur">
+                    <option value={""} ></option>
+                    {
+                      auditeur.length > 0 && auditeur.map((item, index) => {
+                        return (
+                          <option key={index} value={item} >{item}</option>
+                        )
+                      })
+                    }
+                  </Form.Select>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Form.Label>Demandeur</Form.Label>
+                </Col>
+                <Col>
+                  <Form.Select aria-label="filtre" className='main-select-filter' onChange={onChangeDatas} name="demandeur">
+                    <option value={""} ></option>
+                    {
+                      demandeur.length > 0 && demandeur.map((item, index) => {
+                        return (
+                          <option key={index} value={item} >{item}</option>
+                        )
+                      })
+                    }
+                  </Form.Select>
+                </Col>
+              </Row>
+            </div>
             <Form>
               <Form.Group className="mb-3" controlId="inputGbook">
                 <Form.Label>GBOOK</Form.Label>
                 <Form.Control ref={inputRef} type="number" onChange={onChange} />
               </Form.Group>
               <div>
-                <Form.Check
-                  type="switch"
-                  id="ecom"
-                  label="Audit E-com"
-                  onChange={onChangeSwitchEcom}
-                />
-
+                {checkboxAudit && checkboxAudit.map((item, index) => {
+                  return (
+                    <Form.Check key={index}
+                      inline
+                      label={item.label}
+                      name={item.name}
+                      type={item.type}
+                      id={item.id}
+                      onChange={handleChangeBtnRadio}
+                    />
+                  )
+                })
+                }
               </div>
             </Form>
 
