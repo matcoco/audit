@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import Chart from './Chart';
 import "./Home.css"
 import { Container } from 'react-bootstrap';
+import NavGlobal from './NavGlobal';
 
 const Home = () => {
   const { state, dispatch, getLocalStorage } = useContext(myContext)
@@ -93,6 +94,7 @@ const Home = () => {
 
   return (
     <Container className="App">
+      <NavGlobal />
       <div className='main-header'>
         <div>
           <div className='main-Btn-add-audit'><ButtonAddAudit /></div>
@@ -125,7 +127,7 @@ const Home = () => {
           }
         </div>
       </div>
-      {filteredList.length === 0 ?<div className="pic-no-data"><img  src={'https://t4.ftcdn.net/jpg/04/75/01/23/360_F_475012363_aNqXx8CrsoTfJP5KCf1rERd6G50K0hXw.jpg'} alt='no data' /></div>  : ""}
+      {filteredList.length === 0 ? <div className="pic-no-data"><img src={'https://t4.ftcdn.net/jpg/04/75/01/23/360_F_475012363_aNqXx8CrsoTfJP5KCf1rERd6G50K0hXw.jpg'} alt='no data' /></div> : ""}
       <ToastContainer />
     </Container>
 

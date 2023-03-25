@@ -5,6 +5,7 @@ import { myContext } from './context/Context'
 import { initialState, reducer } from './reducer/reducer';
 import './App.css'
 import FormSelectAudit from "./Components/Form";
+import SettingsPage from "./Components/SettingsPage";
 
 function App() {
   
@@ -22,6 +23,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/:gbook" element={<FormSelectAudit />} />
+        <Route path="/settings" element={<SettingsPage />} />
       </Routes>
     </myContext.Provider>
   )
