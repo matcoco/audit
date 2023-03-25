@@ -16,8 +16,8 @@ const Home = () => {
   const { state, dispatch, getLocalStorage } = useContext(myContext)
   const [data, setData] = useState([])
   const [dataFilter, setDataFilter] = useState("")
-  const [auditeur, setauditeur] = useState("")
-  const [demandeur, setDemandeur] = useState("")
+  const [/* auditeur */, setauditeur] = useState("")
+  const [/* demandeur */, setDemandeur] = useState("")
   const [auditCount, setAuditCount] = useState([])
   const navigate = useNavigate()
 
@@ -95,8 +95,6 @@ const Home = () => {
     <Container className="App">
       <div className='main-header'>
         <div>
-          <p><span>Auditeur : </span><span>{auditeur}</span></p>
-          <p><span>Demandé par : </span><span>{demandeur}</span></p>
           <div className='main-Btn-add-audit'><ButtonAddAudit /></div>
         </div>
         <div style={{ width: '355px' }}>
@@ -125,9 +123,6 @@ const Home = () => {
 
             })
           }
-          {/*           {
-            filteredList.length === 0 ? <img src={'/no-data.png'} alt='picture no data'/> :
-          } */}
         </div>
       </div>
       {filteredList.length === 0 ?<div className="pic-no-data"><img  src={'https://t4.ftcdn.net/jpg/04/75/01/23/360_F_475012363_aNqXx8CrsoTfJP5KCf1rERd6G50K0hXw.jpg'} alt='no data' /></div>  : ""}

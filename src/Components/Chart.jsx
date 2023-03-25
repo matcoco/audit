@@ -5,8 +5,6 @@ import { Doughnut } from 'react-chartjs-2';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Chart = ({ auditCount }) => {
-
-    console.log(auditCount)
     const data = {
         labels: ['En cours', 'Conforme', 'Non conforme'],
         datasets: [

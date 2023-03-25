@@ -8,7 +8,7 @@ const NavForm = () => {
     return (
         <Nav>
             <Nav.Item>
-                <Nav.Link href={"/home"}>
+                <Nav.Link href={"/"}>
                     <IconContext.Provider value={{ color: "black", size: 40 }}>
                         <AiFillHome  />
                     </IconContext.Provider>

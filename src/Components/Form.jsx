@@ -1,7 +1,4 @@
-import React, { useEffect, useState, useContext, useCallback, useMemo } from "react";
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col'
-import Form from 'react-bootstrap/Form';
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import NavForm from "./NavForm";
 import { useParams } from 'react-router-dom';
 import { myContext } from '../context/Context'
@@ -11,34 +8,33 @@ import './NavForm.css'
 import * as moment from 'moment'
 
 const FormSelectAudit = () => {
-    const [form_el, setFormEl] = useState({})
-    const [isEcom,] = useState(true)
     const { gbook } = useParams();
     const [currentAudit, setCurrentAudit] = useState({})
     const [saveLocale, setSaveLocale] = useState({})
     const [, setProgressBar] = useState(0)
     const { state, dispatch, getLocalStorage } = useContext(myContext);
-    const arrayInput = [1]
-    const arraySelectNotAuditBtoB = []
+    const [categoryForm, setCategoryForm] = useState([])
+    const [formValues, setFormValues] = useState({});
 
-    const arrayLabelForm_memo = () => {
-        return ["Demande de PC de la cage", "Numéro de série du produit", "Numéro de série conforme à DARRS ?"]
-    }
-
-    const arrayLabelForm = useMemo(arrayLabelForm_memo, [])
-
-
+    // fonction pour mettre à jour le state des valeurs des champs de formulaire
     const handleChange = (event) => {
-        let property = event.target.id
-        let value = event.target.value
-        setFormEl({ ...form_el, [property]: value })
-    }
+        setFormValues({
+            ...formValues,
+            [event.target.name]: event.target.value,
+        });
+    };
+
+    // fonction pour soumettre le formulaire
+    const handleSubmit = (event) => {
+        event.preventDefault();
+    };
+
 
     const verificationDoneConformeOrNot = useCallback((calcul) => {
         let arrayValueForm = []
         if (calcul >= 100) {
-            for (let item in form_el) {
-                arrayValueForm.push(form_el[item])
+            for (let item in formValues) {
+                arrayValueForm.push(formValues[item])
             }
             if (arrayValueForm.includes("NOK")) {
                 return 3
@@ -48,7 +44,7 @@ const FormSelectAudit = () => {
         } else {
             return 1
         }
-    }, [form_el])
+    }, [formValues])
 
     const findCurrentAudit_func = useCallback((locale) => {
         for (let item of locale[0].datas) {
@@ -56,41 +52,42 @@ const FormSelectAudit = () => {
                 setCurrentAudit(item)
                 setSaveLocale(item)
                 if (item.hasOwnProperty('audit')) {
-                    setFormEl(item.audit)
+                    setFormValues(item.audit)
                 } else {
-                    setFormEl({})
+                    setFormValues({})
                 }
             }
         }
     }, [gbook])
 
     const calculProgressBar = useCallback(() => {
-        let numLabelForm = arrayLabelForm?.length
-        let numFormFill = Object.keys(form_el).length
+
+        let numLabelForm = categoryForm?.length
+        let numFormFill = Object.keys(formValues).length
         let calcul = 0
 
         let fieldEmpty = 0
-        for (let item in form_el) {
-            if (form_el[item] === "") {
+        for (let item in formValues) {
+            if (formValues[item] === "") {
                 fieldEmpty++
             }
         }
         numFormFill -= fieldEmpty
         calcul = Math.round((numFormFill / numLabelForm) * 100)
         return [calcul, verificationDoneConformeOrNot(calcul)]
-
-    }, [arrayLabelForm, form_el, verificationDoneConformeOrNot])
+        // eslint-disable-next-line
+    }, [formValues, verificationDoneConformeOrNot])
 
     const saveFormIntoCurrentAudit = useCallback(() => {
         let audit = saveLocale
-        audit['audit'] = form_el
+        audit['audit'] = formValues
         let results = calculProgressBar()
         audit['progress'] = results[0]
         audit['status'] = results[1]
         audit[`dateFinAudit`] = results[0] === 100 ? moment().format('DD/MM/YYYY') : ""
         setProgressBar(results[0])
         setCurrentAudit(currentAudit => currentAudit, audit)
-    }, [form_el, saveLocale, calculProgressBar])
+    }, [formValues, saveLocale, calculProgressBar])
 
     const dispatch_ADD_AUDIT = useCallback(() => {
         dispatch({ type: ADD_AUDIT_BY_LOCALSTORAGE, payload: getLocalStorage() })
@@ -111,19 +108,56 @@ const FormSelectAudit = () => {
 
 
 
-
-
     useEffect(() => {
-        saveFormIntoCurrentAudit()
+
+        let objectsCategory = state[0].forms
+        let category = currentAudit.category
+
+
+        setCategoryForm(objectsCategory[category])
+        saveFormIntoCurrentAudit() 
         if (currentAudit.audit !== undefined) {
             if (Object.keys(currentAudit.audit).length) {
                 dispatch_SET_AUDIT()
             }
         }
 
-    }, [form_el, currentAudit, dispatch_SET_AUDIT, saveFormIntoCurrentAudit])
+    }, [state, formValues, currentAudit, dispatch_SET_AUDIT, saveFormIntoCurrentAudit])
 
-
+    const formFields = categoryForm && categoryForm.map((field) => {
+        if (field.type === 'select') {
+            return (
+                <div key={field.name}>
+                    <label htmlFor={field.name}>{field.label}</label>
+                    <select
+                        id={field.name}
+                        name={field.name}
+                        onChange={handleChange}
+                        value={formValues[field.name] || ''}
+                    >
+                        {field.options.map((option) => (
+                            <option key={option} value={option}>
+                                {option}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            );
+        } else {
+            return (
+                <div key={field.name}>
+                    <label htmlFor={field.name}>{field.label}</label>
+                    <input
+                        type={field.type}
+                        id={field.name}
+                        name={field.name}
+                        onChange={handleChange}
+                        value={formValues[field.name] || ''}
+                    />
+                </div>
+            );
+        }
+    });
 
     return (
         <>
@@ -138,47 +172,9 @@ const FormSelectAudit = () => {
                     </div>
                 </div>
 
-                {arrayLabelForm.map((item, index) => {
-                    if (!arrayInput.includes(index + 1)) {
-                        return (
-                            <Row key={index}>
-                                <Col>
-                                    <Form.Label>{item}</Form.Label>
-                                </Col>
-                                <Col>
-                                    <Form.Select
-                                        disabled={arraySelectNotAuditBtoB.includes(index + 1) && !isEcom}
-                                        aria-label="Default select example"
-                                        id={index + 1}
-                                        onChange={handleChange}
-                                        value={form_el[index + 1]}
-                                    >
-                                        <option></option>
-                                        <option value="OK">OK</option>
-                                        <option value="NOK">NOK</option>
-                                        <option value="INDISPONIBLE">INDISPONIBLE</option>
-                                    </Form.Select>
-                                </Col>
-                            </Row>
-                        )
-                    } else {
-                        return (
-                            <Row key={index}>
-                                <Col>
-                                    <Form.Label>{item}</Form.Label>
-                                </Col>
-                                <Col>
-                                    <Form.Control
-                                        type="text"
-                                        id={index + 1}
-                                        onChange={handleChange}
-                                        value={form_el[index + 1] || ""}
-                                    />
-                                </Col>
-                            </Row>
-                        )
-                    }
-                })}
+                <form onSubmit={handleSubmit}>
+                    {formFields}
+                </form>
             </div>
         </>
     )
