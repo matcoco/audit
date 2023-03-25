@@ -5,13 +5,39 @@ import {
   ADD_AUDIT_BY_LOCALSTORAGE,
   SET_AUDIT,
   SET_VALUE_MENU_STATUS,
-  EDIT_AUDIT
+  EDIT_AUDIT,
+  MANAGER_AUDITOR,
+  MANAGER_APPLICANT
 } from '../reducer/ActionsType';
 
-export const initialState = [
+/* export const initialState = [
   {
     "auditeur": ["Mathieu G", "Samir M"],
     "demandeur": ["Lauris M", "Djamel S", "Pascal C"],
+    "valueStatusMenu": "",
+    "datas": [],
+    "forms": {
+      "prod": [
+        { name: 'serieRam', label: 'Numéro de série RAM', type: 'text' },
+        { name: 'aspectExt', label: 'Aspect extérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
+        { name: 'aspectInt', label: 'Aspect intérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
+      ],
+      "btob": [
+        { name: 'aspectExt', label: 'Aspect extérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
+        { name: 'aspectInt', label: 'Aspect intérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
+      ]
+    },
+    "checkboxAudit": [
+      { label: 'btob', name: 'group1', type: 'radio', id: "btob" },
+      { label: 'prod', name: 'group1', type: 'radio', id: "prod" }
+    ]
+  }
+]; */
+
+export const initialState = [
+  {
+    "auditeur": [],
+    "demandeur": [],
     "valueStatusMenu": "",
     "datas": [],
     "forms": {
@@ -52,6 +78,22 @@ export const reducer = (state = initialState, action) => {
       return setValueMenu(state, payload)
     case EDIT_AUDIT:
       return editAudit(state, payload)
+    case MANAGER_AUDITOR:
+      if (payload.action === "delete") {
+        return managerAuditorDelete(state, payload.array)
+      }
+      if (payload.action === "add") {
+        return managerAuditorAdd(state, payload.array)
+      }
+      break
+    case MANAGER_APPLICANT:
+      if (payload.action === "delete") {
+        return managerApplicantDelete(state, payload.array)
+      }
+      if (payload.action === "add") {
+        return managerApplicantAdd(state, payload.array)
+      }
+      break
     default:
       return state;
   }
@@ -122,21 +164,49 @@ const editAudit = (state, payload) => {
     for (let item in state[0].forms) {
       let objState = state[0].forms[`${item}`]
       let objUser = payload.newState.audit
-      
+
       if (item === category) {
-        for( let cat in objState){
+        for (let cat in objState) {
           let name = objState[cat].name
-          if(objUser.hasOwnProperty(name)){
+          if (objUser.hasOwnProperty(name)) {
             newObj[`${name}`] = objUser[`${name}`]
           }
         }
       }
-      
+
     }
- 
+
     newState[0].datas[position] = payload.newState
     newState[0].datas[position].audit = newObj
   }
+  saveLocalStorage(newState)
+  return newState
+}
+
+const managerAuditorDelete = (state, payload) => {
+  let newState = [...state]
+  newState[0].auditeur = payload
+  saveLocalStorage(newState)
+  return newState
+}
+
+const managerAuditorAdd = (state, payload) => {
+  let newState = [...state]
+  newState[0].auditeur = payload
+  saveLocalStorage(newState)
+  return newState
+}
+
+const managerApplicantDelete = (state, payload) => {
+  let newState = [...state]
+  newState[0].demandeur = payload
+  saveLocalStorage(newState)
+  return newState
+}
+
+const managerApplicantAdd = (state, payload) => {
+  let newState = [...state]
+  newState[0].demandeur = payload
   saveLocalStorage(newState)
   return newState
 }

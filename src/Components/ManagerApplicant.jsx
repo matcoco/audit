@@ -1,62 +1,62 @@
 import React, { useEffect, useContext, useState } from "react";
 import { myContext } from "../context/Context"
 import Table from 'react-bootstrap/Table';
-import { MANAGER_AUDITOR } from "../reducer/ActionsType";
+import { MANAGER_APPLICANT } from "../reducer/ActionsType";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 
-const ManagerAuditor = () => {
+const ManagerApplicant = () => {
     const { state, dispatch } = useContext(myContext)
-    const [auditeurs, setAuditeurs] = useState([])
+    const [demandeurs, setdemandeurs] = useState([])
     const [show, setShow] = useState(false);
-    const [auditorName, setAuditorName] = useState("")
+    const [applicantName, setApplicantName] = useState("")
 
     const handleClose = () => {
-        AddAuditorName();
+        AddapplicantName();
         setShow(false);
     }
     const handleShow = () => setShow(true);
 
-    const handleChangeAuditorName = (event) => {
-        setAuditorName(auditorName => event.target.value)
+    const handleChangeapplicantName = (event) => {
+        setApplicantName(applicantName => event.target.value)
     }
 
     useEffect(() => {
-        setAuditeurs(auditeurs => state[0].auditeur)
-    }, [auditeurs, state])
+        setdemandeurs(demandeurs => state[0].demandeur)
+    }, [demandeurs, state])
 
 
     const deleteAuditor = (event) => {
-        let v_auditors = auditeurs.filter(item => item !== event.target.id)
-        setAuditeurs(auditeurs => v_auditors)
-        dispatch({ type: MANAGER_AUDITOR, payload: { action: "delete", array: v_auditors } })
+        let v_auditors = demandeurs.filter(item => item !== event.target.id)
+        setdemandeurs(demandeurs => v_auditors)
+        dispatch({ type: MANAGER_APPLICANT, payload: { action: "delete", array: v_auditors } })
     }
 
-    const AddAuditorName = () => {
-        let arrayName = [...auditeurs]
-        arrayName.push(auditorName)
-        dispatch({ type: MANAGER_AUDITOR, payload: { action: "add", array: arrayName } })
+    const AddapplicantName = () => {
+        let arrayName = [...demandeurs]
+        arrayName.push(applicantName)
+        dispatch({ type: MANAGER_APPLICANT, payload: { action: "add", array: arrayName } })
     }
 
 
     return (
         <div>
-            <h2>Auditeurs</h2>
+            <h2>demandeurs</h2>
             <Button variant="primary" onClick={handleShow}>
                 Ajouter
             </Button>
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Ajouter un auditeur</Modal.Title>
+                    <Modal.Title>Ajouter un demandeur</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
 
                     <Form>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                             <Form.Label>Prénom</Form.Label>
-                            <Form.Control type="text" onChange={handleChangeAuditorName}/>
+                            <Form.Control type="text" onChange={handleChangeapplicantName}/>
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -80,7 +80,7 @@ const ManagerAuditor = () => {
                 </thead>
                 <tbody>
                     {
-                        auditeurs.map((item, index) => (
+                        demandeurs.map((item, index) => (
                             <tr key={index}>
                                 <td>{index + 1}</td>
                                 <td>{item}</td>
@@ -96,4 +96,4 @@ const ManagerAuditor = () => {
 }
 
 
-export default ManagerAuditor
+export default ManagerApplicant

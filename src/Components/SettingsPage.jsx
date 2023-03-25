@@ -1,11 +1,14 @@
 import React from "react";
+import ManagerApplicant from "./ManagerApplicant";
+import ManagerAuditor from "./ManagerAuditor";
 import NavGlobal from "./NavGlobal";
 
 const SettingsPage = () => {
     return(
         <div>
             <NavGlobal />
-            settings page
+            <ManagerAuditor />
+            <ManagerApplicant />
         </div>
     )
 }

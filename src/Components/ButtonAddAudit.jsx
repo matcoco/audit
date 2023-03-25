@@ -13,12 +13,10 @@ import Col from 'react-bootstrap/Col'
 
 const ButtonAddAudit = () => {
   const [show, setShow] = useState(false)
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
   const [styleAudit, setStyleAudit] = useState("")
   const inputRef = React.createRef();
   const [gbook, setGbook] = useState({})
-  const { state, dispatch } = useContext(myContext)
+  const { state, dispatch, getLocalStorage } = useContext(myContext)
   const [checkboxAudit, setCheckBoxAudit] = useState([])
   const [auditeur, setAuditeur] = useState([])
   const [demandeur, setDemandeur] = useState([])
@@ -26,6 +24,13 @@ const ButtonAddAudit = () => {
     "auditeur": "",
     "demandeur": ""
   })
+
+
+  const handleClose = () => setShow(false)
+
+  const handleShow = () => {
+    setShow(true)
+  }
 
   const onChange = (event) => {
     setGbook(event.target.value);
@@ -73,6 +78,13 @@ const ButtonAddAudit = () => {
     setCheckBoxAudit(state[0].checkboxAudit)
     setAuditeur(state[0].auditeur)
     setDemandeur(state[0].demandeur)
+
+    if (state[0].auditeur.length === 0) {
+      if(getLocalStorage().length !== 0) {
+        setAuditeur(getLocalStorage()[0].auditeur)
+        setDemandeur(getLocalStorage()[0].demandeur)
+      }
+    }
     // eslint-disable-next-line
   }, [])
 
