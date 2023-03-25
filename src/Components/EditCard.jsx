@@ -78,8 +78,7 @@ const EditCard = ({ showEditCard, handleClose, data }) => {
                 newState.category = styleAudit
                 newState.demandeur = datas.demandeur
                 newState.auditeur = datas.auditeur
-
-
+        
                 handleClose()
                 dispatch({ type: EDIT_AUDIT, payload: { newState, lastGbook: data.gbook } })
             } else {

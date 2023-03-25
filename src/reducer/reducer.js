@@ -117,8 +117,28 @@ const editAudit = (state, payload) => {
       }
       index++
     }
+
+    let newObj = {}
+    let category = payload.newState.category
+    for (let item in state[0].forms) {
+      let objState = state[0].forms[`${item}`]
+      let objUser = payload.newState.audit
+      
+      if (item === category) {
+        for( let cat in objState){
+          let name = objState[cat].name
+          if(objUser.hasOwnProperty(name)){
+            newObj[`${name}`] = objUser[`${name}`]
+          }
+        }
+      }
+      
+    }
+ 
     newState[0].datas[position] = payload.newState
+    newState[0].datas[position].audit = newObj
   }
   saveLocalStorage(newState)
   return newState
 }
+
