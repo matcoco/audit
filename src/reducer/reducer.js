@@ -26,7 +26,6 @@ export const initialState = [
       ]
     },
     "checkboxAudit": [
-      { label: 'ecom', name: 'group1', type: 'radio', id: "ecom" },
       { label: 'btob', name: 'group1', type: 'radio', id: "btob" },
       { label: 'prod', name: 'group1', type: 'radio', id: "prod" }
     ]
