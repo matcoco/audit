@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import './styleCards.css';
 import { useNavigate } from "react-router-dom";
-import { AiFillDelete, AiOutlineCheck, AiOutlineClose, AiFillEdit, AiOutlineMinus } from "react-icons/ai";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { IconContext } from 'react-icons'
 import EditCard from "./EditCard";
 import Button from 'react-bootstrap/Button';

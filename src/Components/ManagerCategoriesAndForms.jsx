@@ -1,16 +1,17 @@
 import React, { useEffect, useContext, useState } from "react";
 import { myContext } from "../context/Context"
 import Table from 'react-bootstrap/Table';
-import { MANAGER_AUDITOR } from "../reducer/ActionsType";
+import { MANAGER_CATEGORIES_FORMS } from "../reducer/ActionsType";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 
-const ManagerAuditor = () => {
-    const { state, dispatch, getLocalStorage } = useContext(myContext)
-    const [auditeurs, setAuditeurs] = useState([])
+const ManagerCategoriesAndForms = () => {
+    const { state, dispatch } = useContext(myContext)
+    const [forms, setforms] = useState([])
+    const [categories, setCategories] = useState([])
     const [show, setShow] = useState(false);
-    const [auditorName, setAuditorName] = useState("")
+    const [categorieName, setCategorieName] = useState("")
 
     const handleClose = () => {
         setShow(false);
@@ -18,55 +19,50 @@ const ManagerAuditor = () => {
     const handleShow = () => setShow(true);
 
     const validationClick = () => {
-        AddAuditorName()
+        AddCategorieName()
         setShow(false)
     }
 
-    const handleChangeAuditorName = (event) => {
-        setAuditorName(auditorName => event.target.value)
+
+    const handleChangeCategorieName = (event) => {
+        setCategorieName(categorieName => event.target.value)
     }
 
     useEffect(() => {
-        setAuditeurs(auditeurs => state[0].auditeur)
-        
-        if (state[0].auditeur.length === 0) {
-            if (getLocalStorage().length !== 0) {
-                setAuditeurs(getLocalStorage()[0].auditeur)
-            }
-        }
-    }, [state, getLocalStorage])
+        setCategories(categories => state[0].checkboxAudit)
+    }, [categories, state])
 
 
-    const deleteAuditor = (event) => {
-        let v_auditors = auditeurs.filter(item => item !== event.target.id)
-        setAuditeurs(auditeurs => v_auditors)
-        dispatch({ type: MANAGER_AUDITOR, payload: { action: "delete", array: v_auditors } })
+    const deleteCategorie = (event) => {
+        let v_categories = categories.filter(item => item !== event.target.id)
+        setCategories(categories => v_categories)
+        dispatch({ type: MANAGER_CATEGORIES_FORMS, payload: { action: "delete", array: v_categories } })
     }
 
-    const AddAuditorName = () => {
-        let arrayName = [...auditeurs]
-        arrayName.push(auditorName)
-        dispatch({ type: MANAGER_AUDITOR, payload: { action: "add", array: arrayName } })
+    const AddCategorieName = () => {
+        let arrayName = [...categories]
+        arrayName.push(categories)
+        dispatch({ type: MANAGER_CATEGORIES_FORMS, payload: { action: "add", array: arrayName } })
     }
 
 
     return (
         <div>
-            <h2>Auditeurs</h2>
+            <h2>Categories et formulaires</h2>
             <Button variant="primary" onClick={handleShow}>
                 Ajouter
             </Button>
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Ajouter un auditeur</Modal.Title>
+                    <Modal.Title>Ajouter une catégorie</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
 
                     <Form>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                            <Form.Label>Prénom</Form.Label>
-                            <Form.Control type="text" onChange={handleChangeAuditorName}/>
+                            <Form.Label>Nom de la catégorie</Form.Label>
+                            <Form.Control type="text" onChange={handleChangeCategorieName}/>
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -89,16 +85,16 @@ const ManagerAuditor = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {
-                        auditeurs.map((item, index) => (
+{/*                     {
+                        categories.map((item, index) => (
                             <tr key={index}>
                                 <td>{index + 1}</td>
                                 <td>{item}</td>
                                 <td><button >*</button></td>
-                                <td><button id={item} onClick={deleteAuditor}>-</button></td>
+                                <td><button id={item} onClick={deleteCategorie}>-</button></td>
                             </tr>
                         ))
-                    }
+                    } */}
                 </tbody>
             </Table>
         </div>
@@ -106,4 +102,4 @@ const ManagerAuditor = () => {
 }
 
 
-export default ManagerAuditor
+export default ManagerCategoriesAndForms

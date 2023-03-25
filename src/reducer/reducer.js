@@ -7,7 +7,8 @@ import {
   SET_VALUE_MENU_STATUS,
   EDIT_AUDIT,
   MANAGER_AUDITOR,
-  MANAGER_APPLICANT
+  MANAGER_APPLICANT,
+  MANAGER_CATEGORIES_FORMS
 } from '../reducer/ActionsType';
 
 /* export const initialState = [
@@ -41,19 +42,18 @@ export const initialState = [
     "valueStatusMenu": "",
     "datas": [],
     "forms": {
-      "prod": [
+/*       "prod": [
         { name: 'serieRam', label: 'Numéro de série RAM', type: 'text' },
         { name: 'aspectExt', label: 'Aspect extérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
         { name: 'aspectInt', label: 'Aspect intérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
-      ],
+      ], */
       "btob": [
         { name: 'aspectExt', label: 'Aspect extérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
         { name: 'aspectInt', label: 'Aspect intérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
       ]
     },
     "checkboxAudit": [
-      { label: 'btob', name: 'group1', type: 'radio', id: "btob" },
-      { label: 'prod', name: 'group1', type: 'radio', id: "prod" }
+      { label: 'btob', name: 'group1', type: 'radio', id: "btob" }
     ]
   }
 ];
@@ -94,6 +94,10 @@ export const reducer = (state = initialState, action) => {
         return managerApplicantAdd(state, payload.array)
       }
       break
+
+      case MANAGER_CATEGORIES_FORMS:
+      return
+      
     default:
       return state;
   }

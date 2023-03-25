@@ -7,29 +7,38 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 
 const ManagerApplicant = () => {
-    const { state, dispatch } = useContext(myContext)
-    const [demandeurs, setdemandeurs] = useState([])
+    const { state, dispatch, getLocalStorage } = useContext(myContext)
+    const [demandeurs, setDemandeurs] = useState([])
     const [show, setShow] = useState(false);
     const [applicantName, setApplicantName] = useState("")
 
-    const handleClose = () => {
-        AddapplicantName();
-        setShow(false);
-    }
+    const handleClose = () => setShow(false);
+
     const handleShow = () => setShow(true);
 
+    const validationClick = () => {
+        AddapplicantName();
+        setShow(false)
+    }
     const handleChangeapplicantName = (event) => {
         setApplicantName(applicantName => event.target.value)
     }
 
+
     useEffect(() => {
-        setdemandeurs(demandeurs => state[0].demandeur)
-    }, [demandeurs, state])
+        setDemandeurs(demandeurs => state[0].demandeur)
+
+        if (state[0].demandeur.length === 0) {
+            if (getLocalStorage().length !== 0) {
+                setDemandeurs(getLocalStorage()[0].demandeur)
+            }
+        }
+    }, [state, getLocalStorage])
 
 
     const deleteAuditor = (event) => {
         let v_auditors = demandeurs.filter(item => item !== event.target.id)
-        setdemandeurs(demandeurs => v_auditors)
+        setDemandeurs(demandeurs => v_auditors)
         dispatch({ type: MANAGER_APPLICANT, payload: { action: "delete", array: v_auditors } })
     }
 
@@ -56,7 +65,7 @@ const ManagerApplicant = () => {
                     <Form>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                             <Form.Label>Prénom</Form.Label>
-                            <Form.Control type="text" onChange={handleChangeapplicantName}/>
+                            <Form.Control type="text" onChange={handleChangeapplicantName} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -64,7 +73,7 @@ const ManagerApplicant = () => {
                     <Button variant="secondary" onClick={handleClose}>
                         Fermer
                     </Button>
-                    <Button variant="primary" onClick={handleClose}>
+                    <Button variant="primary" onClick={validationClick}>
                         Ajouter
                     </Button>
                 </Modal.Footer>
