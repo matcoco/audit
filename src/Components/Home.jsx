@@ -7,20 +7,19 @@ import Filter from './Filter';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { toast } from "react-toastify"
-import { useNavigate } from 'react-router-dom';
 import Chart from './Chart';
 import "./Home.css"
 import { Container } from 'react-bootstrap';
-import NavGlobal from './NavGlobal';
+
 
 const Home = () => {
-  const { state, dispatch, getLocalStorage } = useContext(myContext)
+  const { state, dispatch, getLocalStorage, navigationPage } = useContext(myContext)
   const [data, setData] = useState([])
   const [dataFilter, setDataFilter] = useState("")
   const [/* auditeur */, setauditeur] = useState("")
   const [/* demandeur */, setDemandeur] = useState("")
   const [auditCount, setAuditCount] = useState([])
-  const navigate = useNavigate()
+
 
   const dispatch_ADD_AUDIT = useCallback(() => {
     dispatch({ type: ADD_AUDIT_BY_LOCALSTORAGE, payload: getLocalStorage() })
@@ -34,7 +33,7 @@ const Home = () => {
   useEffect(() => {
     let stateLocal = getLocalStorage()
     if (stateLocal.length === 0) {
-      navigate("/")
+      navigationPage("/")
     } else {
       dispatch_ADD_AUDIT()
     }
@@ -94,7 +93,6 @@ const Home = () => {
 
   return (
     <Container className="App">
-      <NavGlobal />
       <div className='main-header'>
         <div>
           <div className='main-Btn-add-audit'><ButtonAddAudit /></div>

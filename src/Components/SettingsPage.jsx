@@ -7,7 +7,6 @@ import NavGlobal from "./NavGlobal";
 const SettingsPage = () => {
     return (
         <div>
-            <NavGlobal />
             <ManagerAuditor />
             <ManagerApplicant />
             <ManagerCategoriesAndForms />

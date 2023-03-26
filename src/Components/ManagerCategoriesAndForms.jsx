@@ -1,19 +1,18 @@
 import React, { useEffect, useContext, useState } from "react";
 import { myContext } from "../context/Context"
 import Table from 'react-bootstrap/Table';
-import { MANAGER_CATEGORIES_FORMS } from "../reducer/ActionsType";
+import { MANAGER_CATEGORIES_FORMS, MANAGER_FORMS_SET_CATEGORY_SELECTED } from "../reducer/ActionsType";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 
+
 const ManagerCategoriesAndForms = () => {
-    const { state, dispatch, getLocalStorage } = useContext(myContext)
-    const [forms, setforms] = useState([])
+    const { state, dispatch, getLocalStorage, navigationPage } = useContext(myContext)
     const [categories, setCategories] = useState([])
     const [show, setShow] = useState(false);
     const [categorieName, setCategorieName] = useState("")
     const [arrayCB, setArrayCB] = useState([])
-
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -22,10 +21,15 @@ const ManagerCategoriesAndForms = () => {
         setShow(false)
     }
 
-
     const handleChangeCategorieName = (event) => {
         setCategorieName(categorieName => event.target.value)
     }
+
+    const navigation = (item) => {
+        dispatch({ type: MANAGER_FORMS_SET_CATEGORY_SELECTED, payload: { storage: getLocalStorage(), item: item } })
+        navigationPage("/settings/forms")
+    }
+
 
     useEffect(() => {
         let arrayCategories = []
@@ -47,7 +51,7 @@ const ManagerCategoriesAndForms = () => {
 
     const deleteCategorie = (event) => {
         let arrayCategories = arrayCB.filter(item => item.label !== event.target.id)
-        dispatch({ type: MANAGER_CATEGORIES_FORMS, payload: { action: "delete_category", array: arrayCategories, value : event.target.id } })
+        dispatch({ type: MANAGER_CATEGORIES_FORMS, payload: { action: "delete_category", array: arrayCategories, value: event.target.id } })
     }
 
     const AddCategorieName = () => {
@@ -91,6 +95,7 @@ const ManagerCategoriesAndForms = () => {
                         <th>Prénom</th>
                         <th>Editer</th>
                         <th>Supprimer</th>
+                        <th>parametrer le formulaire</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -101,6 +106,7 @@ const ManagerCategoriesAndForms = () => {
                                 <td>{item}</td>
                                 <td><button >*</button></td>
                                 <td><button id={item} onClick={deleteCategorie}>-</button></td>
+                                <td><button id={item} onClick={() => navigation(item)}>+</button></td>
                             </tr>
                         ))
                     }

@@ -8,32 +8,12 @@ import {
   EDIT_AUDIT,
   MANAGER_AUDITOR,
   MANAGER_APPLICANT,
-  MANAGER_CATEGORIES_FORMS
+  MANAGER_CATEGORIES_FORMS,
+  MANAGER_FORMS,
+  MANAGER_FORMS_ADD,
+  MANAGER_FORMS_SET_CATEGORY_SELECTED,
+  LOAD_LOCALSTORAGE
 } from '../reducer/ActionsType';
-
-/* export const initialState = [
-  {
-    "auditeur": ["Mathieu G", "Samir M"],
-    "demandeur": ["Lauris M", "Djamel S", "Pascal C"],
-    "valueStatusMenu": "",
-    "datas": [],
-    "forms": {
-      "prod": [
-        { name: 'serieRam', label: 'Numéro de série RAM', type: 'text' },
-        { name: 'aspectExt', label: 'Aspect extérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
-        { name: 'aspectInt', label: 'Aspect intérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
-      ],
-      "btob": [
-        { name: 'aspectExt', label: 'Aspect extérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
-        { name: 'aspectInt', label: 'Aspect intérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
-      ]
-    },
-    "checkboxAudit": [
-      { label: 'btob', name: 'group1', type: 'radio', id: "btob" },
-      { label: 'prod', name: 'group1', type: 'radio', id: "prod" }
-    ]
-  }
-]; */
 
 export const initialState = [
   {
@@ -44,7 +24,14 @@ export const initialState = [
     "forms": {
     },
     "checkboxAudit": [
-    ]
+    ],
+    "settings": {
+      "select": {
+        "options": ["", 'OK', 'NOK', 'INDISPONIBLE', 'MANQUANT']
+      },
+      "allForms": [],
+      "formCategorySelected": ""
+    }
   }
 ];
 
@@ -90,11 +77,25 @@ export const reducer = (state = initialState, action) => {
         return managerCategoryAdd(state, payload)
       }
       if (payload.action === "delete_category") {
-        console.log(payload);
         return managerCategoryDelete(state, payload)
       }
-      return
+      break
 
+    case MANAGER_FORMS:
+      return managerFormsSettingsAdd(state, payload)
+
+    case MANAGER_FORMS_ADD:
+      return managerFormsSettingsAddFormToCategory(state, payload)
+    case MANAGER_FORMS_SET_CATEGORY_SELECTED:
+      // tout peter
+      let newState = [...payload.storage]
+      newState[0].settings.formCategorySelected = payload.item
+      saveLocalStorage(newState)
+      return newState
+
+    case LOAD_LOCALSTORAGE:
+      console.log(payload)
+      return state
     default:
       return state;
   }
@@ -164,18 +165,16 @@ const editAudit = (state, payload) => {
     let category = payload.newState.category
     for (let item in state[0].forms) {
       let objState = state[0].forms[`${item}`]
-      //let objUser = payload.newState.audit
+      let objUser = payload.newState.audit
 
       if (item === category) {
         for (let cat in objState) {
           let name = objState[cat].name
-          console.log(name)
-          /*           if (objUser.hasOwnProperty(name)) {
-                      newObj[`${name}`] = objUser[`${name}`]
-                    } */
+          if (objUser.hasOwnProperty(name)) {
+            newObj[`${name}`] = objUser[`${name}`]
+          }
         }
       }
-
     }
 
     newState[0].datas[position] = payload.newState
@@ -228,6 +227,22 @@ const managerCategoryDelete = (state, payload) => {
   newState[0].checkboxAudit = payload.array
   delete newState[0].forms[`${payload.value}`]
 
+  saveLocalStorage(newState)
+  return newState
+}
+
+
+const managerFormsSettingsAdd = (state, payload) => {
+  let newState = [...state]
+  newState[0].settings.allForms = [...state[0].settings.allForms, payload]
+  saveLocalStorage(newState)
+  return newState
+}
+
+const managerFormsSettingsAddFormToCategory = (state, payload) => {
+  let category = payload.category
+  let newState = [...state]
+  newState[0].forms[`${category}`] = payload.forms[`${category}`]
   saveLocalStorage(newState)
   return newState
 }
