@@ -15,7 +15,7 @@ const ButtonAddAudit = () => {
   const [show, setShow] = useState(false)
   const [styleAudit, setStyleAudit] = useState("")
   const inputRef = React.createRef();
-  const [gbook, setGbook] = useState({})
+  const [gbook, setGbook] = useState("")
   const { state, dispatch, getLocalStorage } = useContext(myContext)
   const [checkboxAudit, setCheckBoxAudit] = useState([])
   const [auditeur, setAuditeur] = useState([])
@@ -50,7 +50,8 @@ const ButtonAddAudit = () => {
 
 
   const submit = () => {
-    if (gbook !== "") {
+
+    if (gbook !== "" && auditeur !== "" && demandeur !== "" && styleAudit !== "") {
       if (verifyUniqueGbook()) {
         let data = {
           gbook,
@@ -69,7 +70,7 @@ const ButtonAddAudit = () => {
         toast.error("produit déjà présent dans la liste", { closeOnClick: true, autoClose: 2000, })
       }
     } else {
-      toast.error("merci de saisir un gbook valide!", { closeOnClick: true, autoClose: 2000, })
+      toast.error("merci de saisir tous les champs!", { closeOnClick: true, autoClose: 2000, })
     }
   };
 
@@ -83,6 +84,7 @@ const ButtonAddAudit = () => {
       if(getLocalStorage().length !== 0) {
         setAuditeur(getLocalStorage()[0].auditeur)
         setDemandeur(getLocalStorage()[0].demandeur)
+        setCheckBoxAudit(getLocalStorage()[0].checkboxAudit)
       }
     }
     // eslint-disable-next-line

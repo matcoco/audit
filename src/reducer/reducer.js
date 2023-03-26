@@ -42,18 +42,8 @@ export const initialState = [
     "valueStatusMenu": "",
     "datas": [],
     "forms": {
-/*       "prod": [
-        { name: 'serieRam', label: 'Numéro de série RAM', type: 'text' },
-        { name: 'aspectExt', label: 'Aspect extérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
-        { name: 'aspectInt', label: 'Aspect intérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
-      ], */
-      "btob": [
-        { name: 'aspectExt', label: 'Aspect extérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
-        { name: 'aspectInt', label: 'Aspect intérieur', type: 'select', options: ["", 'OK', 'NOK', 'INDISPONIBLE'] },
-      ]
     },
     "checkboxAudit": [
-      { label: 'btob', name: 'group1', type: 'radio', id: "btob" }
     ]
   }
 ];
@@ -95,9 +85,16 @@ export const reducer = (state = initialState, action) => {
       }
       break
 
-      case MANAGER_CATEGORIES_FORMS:
+    case MANAGER_CATEGORIES_FORMS:
+      if (payload.action === "add_category") {
+        return managerCategoryAdd(state, payload)
+      }
+      if (payload.action === "delete_category") {
+        console.log(payload);
+        return managerCategoryDelete(state, payload)
+      }
       return
-      
+
     default:
       return state;
   }
@@ -167,14 +164,15 @@ const editAudit = (state, payload) => {
     let category = payload.newState.category
     for (let item in state[0].forms) {
       let objState = state[0].forms[`${item}`]
-      let objUser = payload.newState.audit
+      //let objUser = payload.newState.audit
 
       if (item === category) {
         for (let cat in objState) {
           let name = objState[cat].name
-          if (objUser.hasOwnProperty(name)) {
-            newObj[`${name}`] = objUser[`${name}`]
-          }
+          console.log(name)
+          /*           if (objUser.hasOwnProperty(name)) {
+                      newObj[`${name}`] = objUser[`${name}`]
+                    } */
         }
       }
 
@@ -215,3 +213,21 @@ const managerApplicantAdd = (state, payload) => {
   return newState
 }
 
+const managerCategoryAdd = (state, payload) => {
+  let obj_category = { label: payload.value, name: 'group1', type: 'radio', id: payload.value }
+  let newState = [...state]
+  newState[0].checkboxAudit.push(obj_category)
+  newState[0].forms[`${payload.value}`] = []
+  saveLocalStorage(newState)
+  return newState
+}
+
+const managerCategoryDelete = (state, payload) => {
+
+  let newState = [...state]
+  newState[0].checkboxAudit = payload.array
+  delete newState[0].forms[`${payload.value}`]
+
+  saveLocalStorage(newState)
+  return newState
+}

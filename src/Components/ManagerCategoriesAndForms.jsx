@@ -7,15 +7,14 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 
 const ManagerCategoriesAndForms = () => {
-    const { state, dispatch } = useContext(myContext)
+    const { state, dispatch, getLocalStorage } = useContext(myContext)
     const [forms, setforms] = useState([])
     const [categories, setCategories] = useState([])
     const [show, setShow] = useState(false);
     const [categorieName, setCategorieName] = useState("")
+    const [arrayCB, setArrayCB] = useState([])
 
-    const handleClose = () => {
-        setShow(false);
-    }
+    const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
     const validationClick = () => {
@@ -29,20 +28,30 @@ const ManagerCategoriesAndForms = () => {
     }
 
     useEffect(() => {
-        setCategories(categories => state[0].checkboxAudit)
-    }, [categories, state])
+        let arrayCategories = []
+        let categoriesCB = state[0].checkboxAudit
+
+
+        if (getLocalStorage().length !== 0) {
+            categoriesCB = getLocalStorage()[0].checkboxAudit
+            setArrayCB(arrayCB => categoriesCB)
+        }
+
+        for (let item in categoriesCB) {
+            arrayCategories.push(categoriesCB[item].label)
+        }
+
+        setCategories(categories => arrayCategories)
+    }, [state, getLocalStorage])
 
 
     const deleteCategorie = (event) => {
-        let v_categories = categories.filter(item => item !== event.target.id)
-        setCategories(categories => v_categories)
-        dispatch({ type: MANAGER_CATEGORIES_FORMS, payload: { action: "delete", array: v_categories } })
+        let arrayCategories = arrayCB.filter(item => item.label !== event.target.id)
+        dispatch({ type: MANAGER_CATEGORIES_FORMS, payload: { action: "delete_category", array: arrayCategories, value : event.target.id } })
     }
 
     const AddCategorieName = () => {
-        let arrayName = [...categories]
-        arrayName.push(categories)
-        dispatch({ type: MANAGER_CATEGORIES_FORMS, payload: { action: "add", array: arrayName } })
+        dispatch({ type: MANAGER_CATEGORIES_FORMS, payload: { action: "add_category", value: categorieName } })
     }
 
 
@@ -62,7 +71,7 @@ const ManagerCategoriesAndForms = () => {
                     <Form>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                             <Form.Label>Nom de la catégorie</Form.Label>
-                            <Form.Control type="text" onChange={handleChangeCategorieName}/>
+                            <Form.Control type="text" onChange={handleChangeCategorieName} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -85,7 +94,7 @@ const ManagerCategoriesAndForms = () => {
                     </tr>
                 </thead>
                 <tbody>
-{/*                     {
+                    {
                         categories.map((item, index) => (
                             <tr key={index}>
                                 <td>{index + 1}</td>
@@ -94,7 +103,7 @@ const ManagerCategoriesAndForms = () => {
                                 <td><button id={item} onClick={deleteCategorie}>-</button></td>
                             </tr>
                         ))
-                    } */}
+                    }
                 </tbody>
             </Table>
         </div>
