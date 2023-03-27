@@ -25,9 +25,23 @@ function App() {
     navigate(uri)
   }
 
+  const verificationDoubs = (item, array) => {
+   const arrayItems = []
+
+    for(let element of array){
+      arrayItems.push(element.name)
+    }
+
+    if(!arrayItems.includes(item)){
+      return true
+    }else{
+      return false
+    }
+  }
+
   const [state, dispatch] = useReducer(reducer, initialState);
   return (
-    <myContext.Provider value={{ state, dispatch, getLocalStorage, navigationPage }}>
+    <myContext.Provider value={{ state, dispatch, getLocalStorage, navigationPage, verificationDoubs }}>
           <NavGlobal />
       <Routes>
         <Route path="/" element={<Home />} />

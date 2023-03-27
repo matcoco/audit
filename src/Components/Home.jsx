@@ -30,12 +30,20 @@ const Home = () => {
   }, [dataFilter, dispatch])
 
 
+
   useEffect(() => {
     let stateLocal = getLocalStorage()
     if (stateLocal.length === 0) {
       navigationPage("/")
     } else {
       dispatch_ADD_AUDIT()
+    }
+    if(getLocalStorage().length === 0 
+    || getLocalStorage()[0]?.auditeur?.length === 0
+    || getLocalStorage()[0]?.demandeur?.length === 0
+    || getLocalStorage()[0]?.checkboxAudit?.length === 0 
+    ){
+      toast.info("Merci de configurer l'application avant de l'utiliser ! Cliquer sur l'engrenage pour commencer le paramétrage.", { closeOnClick: true, autoClose: 2000, })
     }
     // eslint-disable-next-line
   }, [])
@@ -64,7 +72,8 @@ const Home = () => {
     setauditeur(auditeur => state[0].auditeur)
     setDemandeur(demandeur => state[0].demandeur)
     countStatusAudit()
-  }, [state, data, countStatusAudit])
+
+  }, [state, data, countStatusAudit, getLocalStorage])
 
   useEffect(() => {
     if (dataFilter !== "") {

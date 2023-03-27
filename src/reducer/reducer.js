@@ -241,7 +241,7 @@ const managerFormsSettingsAdd = (state, payload) => {
 
 const managerFormsSettingsAddFormToCategory = (state, payload) => {
   let category = payload.category
-  let newState = [...state]
+  let newState = [...payload.storage]
   newState[0].forms[`${category}`] = payload.forms[`${category}`]
   saveLocalStorage(newState)
   return newState

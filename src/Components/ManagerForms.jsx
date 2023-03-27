@@ -5,10 +5,12 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { MANAGER_FORMS, MANAGER_FORMS_ADD } from "../reducer/ActionsType";
-
+import { toast } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.min.css';
+import { ToastContainer } from 'react-toastify';
 
 const ManagerForms = () => {
-    const { state, dispatch, getLocalStorage } = useContext(myContext)
+    const { state, dispatch, getLocalStorage, verificationDoubs } = useContext(myContext)
     const [show, setShow] = useState(false);
     const [label, setLabel] = useState("")
     const [name, setName] = useState("")
@@ -50,7 +52,8 @@ const ManagerForms = () => {
     const submit = () => {
         let obj = {}
         obj[`${categorySelected}`] = formsSelected
-        dispatch({ type: MANAGER_FORMS_ADD, payload: { forms: obj, category: categorySelected } })
+        dispatch({ type: MANAGER_FORMS_ADD, payload: { forms: obj, category: categorySelected, storage: getLocalStorage() } })
+        toast.success("Ajout validé !.", { closeOnClick: true, autoClose: 2000, })
     }
 
     const handleChangeForm = (event) => {
@@ -62,27 +65,41 @@ const ManagerForms = () => {
     }
 
     const fieldChoice = (item) => {
-        setFormsSelected(formsSelected => [...formsSelected, item])
+        if (verificationDoubs(item.name, formsSelected)) {
+            setFormsSelected(formsSelected => [...formsSelected, item])
+        }else{
+            toast.error("Element déjà présent dans la liste !")
+        }
+
     }
 
     const addForm = () => {
-        let typeText = { name: name, label: label, type: type }
-        let typeSelect = { name: name, label: label, type: type, options: options }
+        if (verificationDoubs(name, forms)) {
+            let typeText = { name: name, label: label, type: type }
+            let typeSelect = { name: name, label: label, type: type, options: options }
 
-        switch (type) {
-            case TEXT:
-                dispatch({ type: MANAGER_FORMS, payload: typeText })
-                break;
+            switch (type) {
+                case TEXT:
+                    dispatch({ type: MANAGER_FORMS, payload: typeText })
+                    break;
 
-            case SELECT:
-                dispatch({ type: MANAGER_FORMS, payload: typeSelect })
-                break;
+                case SELECT:
+                    dispatch({ type: MANAGER_FORMS, payload: typeSelect })
+                    break;
 
-            default:
-                break;
+                default:
+                    break;
+            }
+
+            handleClose()
+        } else {
+            toast.error("Element déjà présent dans la liste !")
         }
 
-        handleClose()
+    }
+
+    const deleteElement = (index) => {
+        console.log(index)
     }
 
     return (
@@ -175,7 +192,7 @@ const ManagerForms = () => {
                                 <td>{item.name}</td>
                                 <td>{item.type}</td>
                                 <td><button >*</button></td>
-                                <td><button id={item}>-</button></td>
+                                <td><button id={item} onClick={() => deleteElement(index)}>-</button></td>
                             </tr>
                         ))
                     }
@@ -200,6 +217,7 @@ const ManagerForms = () => {
             <Button variant="primary" onClick={submit}>
                 Valider
             </Button>
+            <ToastContainer />
         </div>
     )
 }

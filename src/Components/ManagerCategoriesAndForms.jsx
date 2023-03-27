@@ -92,7 +92,7 @@ const ManagerCategoriesAndForms = () => {
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Prénom</th>
+                        <th>Catégories</th>
                         <th>Editer</th>
                         <th>Supprimer</th>
                         <th>parametrer le formulaire</th>
