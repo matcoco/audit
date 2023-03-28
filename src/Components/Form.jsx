@@ -6,6 +6,9 @@ import { ADD_AUDIT_BY_LOCALSTORAGE, SET_AUDIT } from '../reducer/ActionsType';
 import ProgressBarComp from "./ProgressBarComp";
 import './NavForm.css'
 import * as moment from 'moment'
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 const FormSelectAudit = () => {
     const { gbook } = useParams();
@@ -98,14 +101,16 @@ const FormSelectAudit = () => {
     }, [dispatch, gbook, currentAudit])
 
     useEffect(() => {
+        // eslint-disable-next-line:
         dispatch_ADD_AUDIT()
-        // eslint-disable-next-line
+        console.log("useEffect 1", state[0])
     }, [])
 
     useEffect(() => {
-        findCurrentAudit_func(state)
-    }, [state, findCurrentAudit_func])
 
+        findCurrentAudit_func(state)
+        console.log("useEffect 2", categoryForm)
+    }, [state, findCurrentAudit_func])
 
 
     useEffect(() => {
@@ -115,45 +120,58 @@ const FormSelectAudit = () => {
 
 
         setCategoryForm(objectsCategory[category])
-        saveFormIntoCurrentAudit() 
+        saveFormIntoCurrentAudit()
         if (currentAudit.audit !== undefined) {
             if (Object.keys(currentAudit.audit).length) {
                 dispatch_SET_AUDIT()
             }
         }
-
+        console.log("useEffect 3")
     }, [state, formValues, currentAudit, dispatch_SET_AUDIT, saveFormIntoCurrentAudit])
 
-    const formFields = categoryForm && categoryForm.map((field) => {
+    const formFields = categoryForm && categoryForm?.map((field) => {
         if (field.type === 'select') {
+            console.log(field)
             return (
                 <div key={field.name}>
-                    <label htmlFor={field.name}>{field.label}</label>
-                    <select
-                        id={field.name}
-                        name={field.name}
-                        onChange={handleChange}
-                        value={formValues[field.name] || ''}
-                    >
-                        {field.options.map((option) => (
-                            <option key={option} value={option}>
-                                {option}
-                            </option>
-                        ))}
-                    </select>
+                    <Row>
+                        <Col>
+                            <Form.Label>{field.label}</Form.Label>
+                        </Col>
+                        <Col>
+                            <Form.Select
+                                id={field.name}
+                                name={field.name}
+                                onChange={handleChange}
+                                value={formValues[field?.name] || ''}
+                            >
+                                {field?.options?.map((option) => (
+                                    <option key={option} value={option}>
+                                        {option}
+                                    </option>
+                                ))}
+                            </Form.Select></Col>
+                    </Row>
                 </div>
             );
         } else {
             return (
                 <div key={field.name}>
-                    <label htmlFor={field.name}>{field.label}</label>
-                    <input
-                        type={field.type}
-                        id={field.name}
-                        name={field.name}
-                        onChange={handleChange}
-                        value={formValues[field.name] || ''}
-                    />
+                    <Row>
+                        <Col>
+                            <Form.Label>{field.label}</Form.Label>
+                        </Col>
+                        <Col>
+                            <Form.Control
+                                type={field.type}
+                                id={field.name}
+                                name={field.name}
+                                onChange={handleChange}
+                                value={formValues[field.name] || ''}
+                            />
+                         
+                        </Col>
+                    </Row>
                 </div>
             );
         }

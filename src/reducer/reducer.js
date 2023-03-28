@@ -12,7 +12,8 @@ import {
   MANAGER_FORMS,
   MANAGER_FORMS_ADD,
   MANAGER_FORMS_SET_CATEGORY_SELECTED,
-  LOAD_LOCALSTORAGE
+  LOAD_LOCALSTORAGE,
+  MANAGER_FORMS_CSV
 } from '../reducer/ActionsType';
 
 export const initialState = [
@@ -83,6 +84,9 @@ export const reducer = (state = initialState, action) => {
 
     case MANAGER_FORMS:
       return managerFormsSettingsAdd(state, payload)
+
+    case MANAGER_FORMS_CSV:
+      return managerFormsSettingsAddCSV(state, payload)
 
     case MANAGER_FORMS_ADD:
       return managerFormsSettingsAddFormToCategory(state, payload)
@@ -233,11 +237,19 @@ const managerCategoryDelete = (state, payload) => {
 
 
 const managerFormsSettingsAdd = (state, payload) => {
-  let newState = [...state]
-  newState[0].settings.allForms = [...state[0].settings.allForms, payload]
+  let newState = [...payload.storage]
+  newState[0].settings.allForms = [...newState[0].settings.allForms, payload.data]
   saveLocalStorage(newState)
   return newState
 }
+
+const managerFormsSettingsAddCSV = (state, payload) => {
+  let newState = [...payload.storage]
+  newState[0].settings.allForms = [...newState[0].settings.allForms, ...payload.data]
+  saveLocalStorage(newState)
+  return newState
+}
+
 
 const managerFormsSettingsAddFormToCategory = (state, payload) => {
   let category = payload.category

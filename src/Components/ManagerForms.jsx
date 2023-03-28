@@ -4,10 +4,11 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import { MANAGER_FORMS, MANAGER_FORMS_ADD } from "../reducer/ActionsType";
+import { MANAGER_FORMS, MANAGER_FORMS_ADD, MANAGER_FORMS_CSV } from "../reducer/ActionsType";
 import { toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.min.css';
 import { ToastContainer } from 'react-toastify';
+import Papa from "papaparse"
 
 const ManagerForms = () => {
     const { state, dispatch, getLocalStorage, verificationDoubs } = useContext(myContext)
@@ -67,7 +68,7 @@ const ManagerForms = () => {
     const fieldChoice = (item) => {
         if (verificationDoubs(item.name, formsSelected)) {
             setFormsSelected(formsSelected => [...formsSelected, item])
-        }else{
+        } else {
             toast.error("Element déjà présent dans la liste !")
         }
 
@@ -75,16 +76,16 @@ const ManagerForms = () => {
 
     const addForm = () => {
         if (verificationDoubs(name, forms)) {
-            let typeText = { name: name, label: label, type: type }
-            let typeSelect = { name: name, label: label, type: type, options: options }
-
+            let data = {}
             switch (type) {
                 case TEXT:
-                    dispatch({ type: MANAGER_FORMS, payload: typeText })
+                    data = { name: name, label: label, type: type }
+                    dispatch({ type: MANAGER_FORMS, payload: { data: data, storage: getLocalStorage() } })
                     break;
 
                 case SELECT:
-                    dispatch({ type: MANAGER_FORMS, payload: typeSelect })
+                    data = { name: name, label: label, type: type, options: options }
+                    dispatch({ type: MANAGER_FORMS, payload: { data: data, storage: getLocalStorage() } })
                     break;
 
                 default:
@@ -102,8 +103,37 @@ const ManagerForms = () => {
         console.log(index)
     }
 
+    const csvReader = (e) => {
+        Papa.parse(e.target.files[0], {
+            header: true,
+            skipEmptyLines: true,
+            complete: function (results) {
+                buildFormsWithCSVfile(results.data)
+            },
+        });
+    }
+
+    const buildFormsWithCSVfile = (array) => {
+        let newArray = []
+        let selectType = {}
+        for (let item of array) {
+            if (item.type === SELECT) {
+                selectType = Object.assign(item)
+                selectType.options = options
+            }
+            newArray.push(item)
+        }
+        dispatch({ type: MANAGER_FORMS_CSV, payload: { data: newArray, storage: getLocalStorage() } })
+    }
+
     return (
         <div>
+            <div>
+                <Form.Group controlId="formFile" className="mb-3">
+                    <Form.Label>Importation formulaire</Form.Label>
+                    <Form.Control type="file" onChange={csvReader} />
+                </Form.Group>
+            </div>
             <h2>Gestionnaire de formulaire</h2>
             <Table striped bordered hover>
                 <thead>
