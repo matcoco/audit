@@ -4,7 +4,7 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import { MANAGER_FORMS, MANAGER_FORMS_ADD, MANAGER_FORMS_CSV } from "../reducer/ActionsType";
+import { MANAGER_FORMS, MANAGER_FORMS_ADD, MANAGER_FORMS_CSV, MANAGER_FORMS_SELECTED_DELETE, MANAGER_FORMS_DELETE } from "../reducer/ActionsType";
 import { toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.min.css';
 import { ToastContainer } from 'react-toastify';
@@ -100,8 +100,12 @@ const ManagerForms = () => {
     }
 
     const deleteElement = (index) => {
-        console.log(index)
+       dispatch({type : MANAGER_FORMS_SELECTED_DELETE, payload : { index : index, category : categorySelected, storage : getLocalStorage(), value: formsSelected[index].name}})
     }
+
+    const deleteElementForm = (index) => {
+        dispatch({type : MANAGER_FORMS_DELETE, payload : { index : index, category : categorySelected, storage : getLocalStorage(), value: forms[index].name}})
+     }
 
     const csvReader = (e) => {
         Papa.parse(e.target.files[0], {
@@ -156,7 +160,7 @@ const ManagerForms = () => {
                                 <td>{item.name}</td>
                                 <td>{item.type}</td>
                                 <td><button >*</button></td>
-                                <td><button>-</button></td>
+                                <td><button onClick={() => deleteElementForm(index)}>-</button></td>
                                 <td><button onClick={() => fieldChoice(item)}>+</button></td>
                             </tr>
                         ))

@@ -101,23 +101,21 @@ const FormSelectAudit = () => {
     }, [dispatch, gbook, currentAudit])
 
     useEffect(() => {
-        // eslint-disable-next-line:
+        // eslint-disable-next-line
         dispatch_ADD_AUDIT()
-        console.log("useEffect 1", state[0])
+        // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
-
+        // eslint-disable-next-line
         findCurrentAudit_func(state)
-        console.log("useEffect 2", categoryForm)
+        // eslint-disable-next-line
     }, [state, findCurrentAudit_func])
 
 
     useEffect(() => {
-
         let objectsCategory = state[0].forms
         let category = currentAudit.category
-
 
         setCategoryForm(objectsCategory[category])
         saveFormIntoCurrentAudit()
@@ -126,12 +124,11 @@ const FormSelectAudit = () => {
                 dispatch_SET_AUDIT()
             }
         }
-        console.log("useEffect 3")
+
     }, [state, formValues, currentAudit, dispatch_SET_AUDIT, saveFormIntoCurrentAudit])
 
     const formFields = categoryForm && categoryForm?.map((field) => {
         if (field.type === 'select') {
-            console.log(field)
             return (
                 <div key={field.name}>
                     <Row>
