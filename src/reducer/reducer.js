@@ -296,9 +296,11 @@ const managerFormsSelectedDelete = (state, payload) => {
 
 const updatePourcentForm = (newState, payload) => {
   let category = payload.category
+
   let forms = newState[0].forms[`${category}`]
   forms = newState[0].forms[`${category}`].map(item => item.name)
   let allCards = newState[0].datas.filter(item => item.category === category)
+  let datasFormNotCurrentCategory = newState[0].datas.filter(item => item.category !== category)
   let obj = {}
   let count = 0
 
@@ -311,12 +313,10 @@ const updatePourcentForm = (newState, payload) => {
     
     allCards[count].audit = obj
     allCards[count].progress = calculPourcentDoneForm(data.audit, forms)
-    console.log(allCards[count].progress, "%")
-    
     count++
   }
 
-  return allCards
+  return [...allCards, ...datasFormNotCurrentCategory]
 }
 
 const calculPourcentDoneForm = (numFormFill, numLabelForm) => {
