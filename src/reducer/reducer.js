@@ -276,6 +276,7 @@ const managerFormsSettingsAddFormToCategory = (state, payload) => {
   let category = payload.category
   let newState = [...payload.storage]
   newState[0].forms[`${category}`] = payload.forms[`${category}`]
+  newState[0].datas = updatePourcentForm(newState, payload)
   saveLocalStorage(newState)
   return newState
 }
@@ -284,8 +285,52 @@ const managerFormsSelectedDelete = (state, payload) => {
   let newState = [...payload.storage]
   let category = payload.category
   let forms = newState[0].forms[`${category}`]
+
   newState[0].forms[`${category}`] = forms.slice(0, payload.index).concat(forms.slice(payload.index + 1));
+  newState[0].datas = updatePourcentForm(newState, payload)
+
+
   saveLocalStorage(newState)
   return newState
+}
+
+const updatePourcentForm = (newState, payload) => {
+  let category = payload.category
+  let forms = newState[0].forms[`${category}`]
+  forms = newState[0].forms[`${category}`].map(item => item.name)
+  let allCards = newState[0].datas.filter(item => item.category === category)
+  let obj = {}
+  let count = 0
+
+  for (let data of allCards) {
+    for (let item in data.audit) {
+      if (forms.includes(item)) {
+        obj[`${item}`] = data.audit[`${item}`]
+      }
+    }
+    
+    allCards[count].audit = obj
+    allCards[count].progress = calculPourcentDoneForm(data.audit, forms)
+    console.log(allCards[count].progress, "%")
+    
+    count++
+  }
+
+  return allCards
+}
+
+const calculPourcentDoneForm = (numFormFill, numLabelForm) => {
+
+  let numLabelFormSettings = numLabelForm?.length
+  let numFormUser = Object.keys(numFormFill).length
+
+  let fieldEmpty = 0
+  for (let item in numFormFill) {
+      if (numFormFill[item] === "") {
+          fieldEmpty++
+      }
+  }
+  numFormUser -= fieldEmpty
+  return Math.round((numFormUser / numLabelFormSettings) * 100)
 }
 
