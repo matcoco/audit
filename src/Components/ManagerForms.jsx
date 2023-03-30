@@ -20,7 +20,7 @@ const ManagerForms = () => {
     const [options, setOptions] = useState([])
     const [formsSelected, setFormsSelected] = useState([])
     const [categorySelected, setCategorySelected] = useState("")
-    const [categoriesArray, setCategoriesArray] = useState([])
+    const [/* categoriesArray */, setCategoriesArray] = useState([])
     // eslint-disable-next-line 
     const [catSelected, setCatSelected] = useState("")
     const TEXT = "text"
@@ -50,9 +50,10 @@ const ManagerForms = () => {
     }, [state, getLocalStorage])
 
 
-    const submit = () => {
+    const submit = (array) => {
         let obj = {}
-        obj[`${categorySelected}`] = formsSelected
+        obj[`${categorySelected}`] = array
+        console.log(obj)
         dispatch({ type: MANAGER_FORMS_ADD, payload: { forms: obj, category: categorySelected, storage: getLocalStorage() } })
         toast.success("Ajout validé !.", { closeOnClick: true, autoClose: 2000, })
     }
@@ -67,7 +68,8 @@ const ManagerForms = () => {
 
     const fieldChoice = (item) => {
         if (verificationDoubs(item.name, formsSelected)) {
-            setFormsSelected(formsSelected => [...formsSelected, item])
+            /* setFormsSelected(formsSelected => [...formsSelected, item]) */
+            submit([...formsSelected, item])
         } else {
             toast.error("Element déjà présent dans la liste !")
         }
@@ -100,12 +102,12 @@ const ManagerForms = () => {
     }
 
     const deleteElement = (index) => {
-       dispatch({type : MANAGER_FORMS_SELECTED_DELETE, payload : { index : index, category : categorySelected, storage : getLocalStorage(), value: formsSelected[index].name}})
+        dispatch({ type: MANAGER_FORMS_SELECTED_DELETE, payload: { index: index, category: categorySelected, storage: getLocalStorage(), value: formsSelected[index].name } })
     }
 
     const deleteElementForm = (index) => {
-        dispatch({type : MANAGER_FORMS_DELETE, payload : { index : index, category : categorySelected, storage : getLocalStorage(), value: forms[index].name}})
-     }
+        dispatch({ type: MANAGER_FORMS_DELETE, payload: { index: index, category: categorySelected, storage: getLocalStorage(), value: forms[index].name } })
+    }
 
     const csvReader = (e) => {
         Papa.parse(e.target.files[0], {
@@ -232,7 +234,7 @@ const ManagerForms = () => {
                     }
                 </tbody>
             </Table>
-            <Form.Group className="mb-3" controlId="formMenu">
+{/*             <Form.Group className="mb-3" controlId="formMenu">
                 <Form.Label>Catégories</Form.Label>
                 <Form.Select
                     aria-label="Default select example"
@@ -246,11 +248,11 @@ const ManagerForms = () => {
                         ))
                     }
                 </Form.Select>
-            </Form.Group>
+            </Form.Group> */}
 
-            <Button variant="primary" onClick={submit}>
+{/*             <Button variant="primary" onClick={submit}>
                 Valider
-            </Button>
+            </Button>  */}
             <ToastContainer />
         </div>
     )
