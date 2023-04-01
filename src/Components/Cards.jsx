@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import './styleCards.css';
 import { useNavigate } from "react-router-dom";
-import { AiFillDelete, AiOutlineCheck, AiOutlineClose, AiFillEdit, AiOutlineMinus } from "react-icons/ai";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { IconContext } from 'react-icons'
 import EditCard from "./EditCard";
 import Button from 'react-bootstrap/Button';
@@ -29,6 +29,13 @@ const Cards = ({ data, deleteCard }) => {
             break;
     }
     const navigatePage = () => navigate(`/${data.gbook}`);
+
+    const progressNumber = (data) => {
+        if(isNaN(data.progress)) return 0
+        if(data.progress === null) return 0
+        return data.progress
+    }
+
     return (
         <div className={`container-card ${color}`}>
             <div className="main-first-card">
@@ -36,7 +43,7 @@ const Cards = ({ data, deleteCard }) => {
                     <h2>{data.gbook}</h2>
                     <p>{data.category}</p>
                 </div>
-                <div className="middle-card"><h2>{data.progress}%</h2></div>
+                <div className="middle-card"><h2>{progressNumber(data)}%</h2></div>
                 <div className="end-card">
                     <div>
                         <Button variant="outline-primary audit-btn" onClick={() => navigatePage()}>AUDITER</Button>

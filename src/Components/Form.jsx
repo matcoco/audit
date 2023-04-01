@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, { useEffect, useState, useContext, useCallback, useMemo } from "react";
 import NavForm from "./NavForm";
 import { useParams } from 'react-router-dom';
 import { myContext } from '../context/Context'
@@ -6,6 +6,10 @@ import { ADD_AUDIT_BY_LOCALSTORAGE, SET_AUDIT } from '../reducer/ActionsType';
 import ProgressBarComp from "./ProgressBarComp";
 import './NavForm.css'
 import * as moment from 'moment'
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+
 
 const FormSelectAudit = () => {
     const { gbook } = useParams();
@@ -15,6 +19,7 @@ const FormSelectAudit = () => {
     const { state, dispatch, getLocalStorage } = useContext(myContext);
     const [categoryForm, setCategoryForm] = useState([])
     const [formValues, setFormValues] = useState({});
+
 
     // fonction pour mettre à jour le state des valeurs des champs de formulaire
     const handleChange = (event) => {
@@ -98,24 +103,25 @@ const FormSelectAudit = () => {
     }, [dispatch, gbook, currentAudit])
 
     useEffect(() => {
+        // eslint-disable-next-line
         dispatch_ADD_AUDIT()
         // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
+        // eslint-disable-next-line
         findCurrentAudit_func(state)
+        // eslint-disable-next-line
     }, [state, findCurrentAudit_func])
 
 
-
     useEffect(() => {
-
         let objectsCategory = state[0].forms
         let category = currentAudit.category
 
-
         setCategoryForm(objectsCategory[category])
-        saveFormIntoCurrentAudit() 
+
+        saveFormIntoCurrentAudit()
         if (currentAudit.audit !== undefined) {
             if (Object.keys(currentAudit.audit).length) {
                 dispatch_SET_AUDIT()
@@ -124,41 +130,69 @@ const FormSelectAudit = () => {
 
     }, [state, formValues, currentAudit, dispatch_SET_AUDIT, saveFormIntoCurrentAudit])
 
-    const formFields = categoryForm && categoryForm.map((field) => {
+
+
+    const formFields = categoryForm && categoryForm?.map((field) => {
         if (field.type === 'select') {
             return (
                 <div key={field.name}>
-                    <label htmlFor={field.name}>{field.label}</label>
-                    <select
-                        id={field.name}
-                        name={field.name}
-                        onChange={handleChange}
-                        value={formValues[field.name] || ''}
-                    >
-                        {field.options.map((option) => (
-                            <option key={option} value={option}>
-                                {option}
-                            </option>
-                        ))}
-                    </select>
+                    <Row>
+                        <Col>
+                            <Form.Label>{field.label}</Form.Label>
+                        </Col>
+                        <Col>
+                            <Form.Select
+                                id={field.name}
+                                name={field.name}
+                                onChange={handleChange}
+                                value={formValues[field?.name] || ''}
+                            >
+                                {field?.options?.map((option) => (
+                                    <option key={option} value={option}>
+                                        {option}
+                                    </option>
+                                ))}
+                            </Form.Select></Col>
+                    </Row>
                 </div>
             );
         } else {
             return (
                 <div key={field.name}>
-                    <label htmlFor={field.name}>{field.label}</label>
-                    <input
-                        type={field.type}
-                        id={field.name}
-                        name={field.name}
-                        onChange={handleChange}
-                        value={formValues[field.name] || ''}
-                    />
+                    <Row>
+                        <Col>
+                            <Form.Label>{field.label}</Form.Label>
+                        </Col>
+                        <Col>
+                            <Form.Control
+                                type={field.type}
+                                id={field.name}
+                                name={field.name}
+                                onChange={handleChange}
+                                value={formValues[field.name] || ''}
+                            />
+
+                        </Col>
+                    </Row>
                 </div>
             );
         }
     });
+    const askConfigForm = useMemo(() => {
 
+        return (
+            <div>
+                <div className="pic-no-data">
+                    <img src="https://t4.ftcdn.net/jpg/04/75/01/23/360_F_475012363_aNqXx8CrsoTfJP5KCf1rERd6G50K0hXw.jpg" alt="no-data" />
+
+                </div>
+                <div>
+                    <h2>Merci de configurer le formulaire {currentAudit.category} depuis les paramètres</h2>
+                </div>
+            </div>
+
+        )
+    }, [currentAudit.category])
     return (
         <>
             <div>
@@ -173,7 +207,7 @@ const FormSelectAudit = () => {
                 </div>
 
                 <form onSubmit={handleSubmit}>
-                    {formFields}
+                    {categoryForm && categoryForm.length !== 0 ? formFields : askConfigForm}
                 </form>
             </div>
         </>

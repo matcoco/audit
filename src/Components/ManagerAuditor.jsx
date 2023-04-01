@@ -5,26 +5,49 @@ import { MANAGER_AUDITOR } from "../reducer/ActionsType";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import { toast } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.min.css';
+import { ToastContainer } from 'react-toastify';
 
 const ManagerAuditor = () => {
-    const { state, dispatch } = useContext(myContext)
+    const { state, dispatch, getLocalStorage } = useContext(myContext)
     const [auditeurs, setAuditeurs] = useState([])
     const [show, setShow] = useState(false);
     const [auditorName, setAuditorName] = useState("")
+    const [showEdit, setShowEdit] = useState(false);
+    const [auditorNameIndex, setAuditorNameIndex] = useState(0)
 
-    const handleClose = () => {
-        AddAuditorName();
-        setShow(false);
-    }
+    const handleClose = () => setShow(false);
+    const handleCloseEdit = () => setShowEdit(false);
     const handleShow = () => setShow(true);
 
-    const handleChangeAuditorName = (event) => {
-        setAuditorName(auditorName => event.target.value)
+    const handleShowEdit = (index) => {
+        setShowEdit(true);
+        setAuditorName(auditorName => auditeurs[index])
+        setAuditorNameIndex(auditorNameIndex => index)
     }
 
+    const validationClick = () => {
+        AddAuditorName()
+        setShow(false)
+    }
+
+    const handleChangeAuditorName = (event) => setAuditorName(auditorName => event.target.value)
+    
+    const submitEditForm = () => {
+        dispatch({ type: MANAGER_AUDITOR, payload: { action: "edit", storage: getLocalStorage(), auditeur : auditorName, index : auditorNameIndex } })
+        toast.success("Modification validé !.", { closeOnClick: true, autoClose: 2000, })
+        handleCloseEdit()
+    }
     useEffect(() => {
         setAuditeurs(auditeurs => state[0].auditeur)
-    }, [auditeurs, state])
+
+        if (state[0].auditeur.length === 0) {
+            if (getLocalStorage().length !== 0) {
+                setAuditeurs(getLocalStorage()[0].auditeur)
+            }
+        }
+    }, [state, getLocalStorage])
 
 
     const deleteAuditor = (event) => {
@@ -56,7 +79,7 @@ const ManagerAuditor = () => {
                     <Form>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                             <Form.Label>Prénom</Form.Label>
-                            <Form.Control type="text" onChange={handleChangeAuditorName}/>
+                            <Form.Control type="text" onChange={handleChangeAuditorName} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -64,8 +87,30 @@ const ManagerAuditor = () => {
                     <Button variant="secondary" onClick={handleClose}>
                         Fermer
                     </Button>
-                    <Button variant="primary" onClick={handleClose}>
+                    <Button variant="primary" onClick={validationClick}>
                         Ajouter
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <Modal show={showEdit} onHide={handleCloseEdit}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Modifier un auditeur</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+
+                    <Form>
+                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                            <Form.Label>Prénom</Form.Label>
+                            <Form.Control type="text" onChange={handleChangeAuditorName} value={auditorName} />
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseEdit}>
+                        Fermer
+                    </Button>
+                    <Button variant="primary" onClick={submitEditForm}>
+                        Valider
                     </Button>
                 </Modal.Footer>
             </Modal>
@@ -84,13 +129,14 @@ const ManagerAuditor = () => {
                             <tr key={index}>
                                 <td>{index + 1}</td>
                                 <td>{item}</td>
-                                <td><button >*</button></td>
+                                <td><button onClick={() => handleShowEdit(index)}>*</button></td>
                                 <td><button id={item} onClick={deleteAuditor}>-</button></td>
                             </tr>
                         ))
                     }
                 </tbody>
             </Table>
+            <ToastContainer />
         </div>
     )
 }

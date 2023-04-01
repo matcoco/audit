@@ -7,20 +7,20 @@ import Filter from './Filter';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { toast } from "react-toastify"
-import { useNavigate } from 'react-router-dom';
 import Chart from './Chart';
 import "./Home.css"
 import { Container } from 'react-bootstrap';
-import NavGlobal from './NavGlobal';
+import ExportXlsx from './ExportXlsx';
+
 
 const Home = () => {
-  const { state, dispatch, getLocalStorage } = useContext(myContext)
+  const { state, dispatch, getLocalStorage, navigationPage } = useContext(myContext)
   const [data, setData] = useState([])
   const [dataFilter, setDataFilter] = useState("")
   const [/* auditeur */, setauditeur] = useState("")
   const [/* demandeur */, setDemandeur] = useState("")
   const [auditCount, setAuditCount] = useState([])
-  const navigate = useNavigate()
+
 
   const dispatch_ADD_AUDIT = useCallback(() => {
     dispatch({ type: ADD_AUDIT_BY_LOCALSTORAGE, payload: getLocalStorage() })
@@ -31,12 +31,20 @@ const Home = () => {
   }, [dataFilter, dispatch])
 
 
+
   useEffect(() => {
     let stateLocal = getLocalStorage()
     if (stateLocal.length === 0) {
-      navigate("/")
+      navigationPage("/")
     } else {
       dispatch_ADD_AUDIT()
+    }
+    if(getLocalStorage().length === 0 
+    || getLocalStorage()[0]?.auditeur?.length === 0
+    || getLocalStorage()[0]?.demandeur?.length === 0
+    || getLocalStorage()[0]?.checkboxAudit?.length === 0 
+    ){
+      toast.info("Merci de configurer l'application avant de l'utiliser ! Cliquer sur l'engrenage pour commencer le paramétrage.", { closeOnClick: true, autoClose: 2000, })
     }
     // eslint-disable-next-line
   }, [])
@@ -65,7 +73,8 @@ const Home = () => {
     setauditeur(auditeur => state[0].auditeur)
     setDemandeur(demandeur => state[0].demandeur)
     countStatusAudit()
-  }, [state, data, countStatusAudit])
+
+  }, [state, data, countStatusAudit, getLocalStorage])
 
   useEffect(() => {
     if (dataFilter !== "") {
@@ -94,10 +103,10 @@ const Home = () => {
 
   return (
     <Container className="App">
-      <NavGlobal />
       <div className='main-header'>
         <div>
           <div className='main-Btn-add-audit'><ButtonAddAudit /></div>
+          <div className=""><ExportXlsx /></div>
         </div>
         <div style={{ width: '355px' }}>
           <Chart auditCount={auditCount} />
