@@ -10,6 +10,7 @@ import { toast } from "react-toastify"
 import Chart from './Chart';
 import "./Home.css"
 import { Container } from 'react-bootstrap';
+import ExportXlsx from './ExportXlsx';
 
 
 const Home = () => {
@@ -105,6 +106,7 @@ const Home = () => {
       <div className='main-header'>
         <div>
           <div className='main-Btn-add-audit'><ButtonAddAudit /></div>
+          <div className=""><ExportXlsx /></div>
         </div>
         <div style={{ width: '355px' }}>
           <Chart auditCount={auditCount} />

@@ -34,7 +34,16 @@ export const initialState = [
         "options": ["", 'OK', 'NOK', 'INDISPONIBLE', 'MANQUANT']
       },
       "allForms": [],
-      "formCategorySelected": ""
+      "formCategorySelected": "",
+      "natureDemande" : {
+        "options": ["AUDIT"]
+      },
+      "demande": {
+        "options" : ["NON VENDABLE", "A DEMANTELER", "VENDABLE", "NON ELIGIBLE E-COM", "ELIGIBLE E-COM"]
+      },
+      "statut" : {
+        "options": ["A TRAITER", "EN COURS","TERMINE"]
+      }
     }
   }
 ];
@@ -282,10 +291,21 @@ const managerCategoryAdd = (state, payload) => {
 }
 
 const managerCategoryDelete = (state, payload) => {
-
   let newState = [...state]
   newState[0].checkboxAudit = payload.array
   delete newState[0].forms[`${payload.value}`]
+
+  let index = 0
+  for(let data of newState[0].datas){
+    console.log(data.category)
+    console.log(payload.value)
+    if(data.category === payload.value){
+      newState[0].datas[index].audit = {}
+      newState[0].datas[index].category = ""
+      newState[0].datas[index].progress = 0
+    }
+    index++
+  }
 
   saveLocalStorage(newState)
   return newState
