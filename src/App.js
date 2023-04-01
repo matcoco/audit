@@ -39,6 +39,8 @@ function App() {
     }
   }
 
+  
+
   const [state, dispatch] = useReducer(reducer, initialState);
   return (
     <myContext.Provider value={{ state, dispatch, getLocalStorage, navigationPage, verificationDoubs }}>

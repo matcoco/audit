@@ -21,6 +21,7 @@ const EditCard = ({ showEditCard, handleClose, data }) => {
     const [demandeur, setDemandeur] = useState([])
     const [checkboxAudit, setCheckBoxAudit] = useState([])
     const [styleAudit, setStyleAudit] = useState("")
+    const {  getLocalStorage } = useContext(myContext)
 
     useEffect(() => {
         setCheckBoxAudit(state[0].checkboxAudit)
@@ -80,7 +81,7 @@ const EditCard = ({ showEditCard, handleClose, data }) => {
                 newState.auditeur = datas.auditeur
         
                 handleClose()
-                dispatch({ type: EDIT_AUDIT, payload: { newState, lastGbook: data.gbook } })
+                dispatch({ type: EDIT_AUDIT, payload: { newState, lastGbook: data.gbook, storage: getLocalStorage() } })
             } else {
                 toast.error("produit déjà présent dans la liste", { closeOnClick: true, autoClose: 2000, })
             }

@@ -5,16 +5,26 @@ import { MANAGER_APPLICANT } from "../reducer/ActionsType";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import { toast } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.min.css';
+import { ToastContainer } from 'react-toastify';
 
 const ManagerApplicant = () => {
     const { state, dispatch, getLocalStorage } = useContext(myContext)
     const [demandeurs, setDemandeurs] = useState([])
     const [show, setShow] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
     const [applicantName, setApplicantName] = useState("")
+    const [applicantNameIndex, setApplicantNameIndex] = useState(0)
 
     const handleClose = () => setShow(false);
-
     const handleShow = () => setShow(true);
+    const handleShowEdit = (index) => {
+        setShowEdit(true);
+        setApplicantName(applicantName => demandeurs[index])
+        setApplicantNameIndex(applicantNameIndex => index)
+    }
+    const handleCloseEdit = () => setShowEdit(false);
 
     const validationClick = () => {
         AddapplicantName();
@@ -34,6 +44,13 @@ const ManagerApplicant = () => {
             }
         }
     }, [state, getLocalStorage])
+
+    const submitEditForm = () => {
+
+        dispatch({ type: MANAGER_APPLICANT, payload: { action: "edit", storage: getLocalStorage(), demandeur : applicantName, index : applicantNameIndex } })
+        toast.success("Modification validé !.", { closeOnClick: true, autoClose: 2000, })
+        handleCloseEdit()
+    }
 
 
     const deleteAuditor = (event) => {
@@ -78,6 +95,29 @@ const ManagerApplicant = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+
+            <Modal show={showEdit} onHide={handleCloseEdit}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Modifier un demandeur</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+
+                    <Form>
+                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                            <Form.Label>Prénom</Form.Label>
+                            <Form.Control type="text" onChange={handleChangeapplicantName} value={applicantName} />
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseEdit}>
+                        Fermer
+                    </Button>
+                    <Button variant="primary" onClick={submitEditForm}>
+                        Valider
+                    </Button>
+                </Modal.Footer>
+            </Modal>
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -93,13 +133,14 @@ const ManagerApplicant = () => {
                             <tr key={index}>
                                 <td>{index + 1}</td>
                                 <td>{item}</td>
-                                <td><button >*</button></td>
+                                <td><button onClick={() => handleShowEdit(index)}>*</button></td>
                                 <td><button id={item} onClick={deleteAuditor}>-</button></td>
                             </tr>
                         ))
                     }
                 </tbody>
             </Table>
+            <ToastContainer />
         </div>
     )
 }
