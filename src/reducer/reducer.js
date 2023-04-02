@@ -31,7 +31,7 @@ export const initialState = [
     ],
     "settings": {
       "select": {
-        "options": ["", 'OK', 'NOK', 'INDISPONIBLE', 'MANQUANT']
+        "options": ["", 'OK', 'NOK', 'INDISPONIBLE', 'MANQUANT',"NON VENDABLE", "A DEMANTELER", "VENDABLE", "NON ELIGIBLE E-COM", "ELIGIBLE E-COM"]
       },
       "allForms": [],
       "formCategorySelected": "",
@@ -297,8 +297,6 @@ const managerCategoryDelete = (state, payload) => {
 
   let index = 0
   for(let data of newState[0].datas){
-    console.log(data.category)
-    console.log(payload.value)
     if(data.category === payload.value){
       newState[0].datas[index].audit = {}
       newState[0].datas[index].category = ""
@@ -327,7 +325,6 @@ const managerFormsSettingsEdit = (payload) => {
   for (let category in forms) {
     for (let obj of forms[category]) {
       if (obj.name === payload.form.name) {
-        console.log(index)
         newState[0].forms[category][index] = payload.form
         index = 0
         break

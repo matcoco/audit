@@ -120,7 +120,6 @@ const FormSelectAudit = () => {
         let category = currentAudit.category
 
         setCategoryForm(objectsCategory[category])
-
         saveFormIntoCurrentAudit()
         if (currentAudit.audit !== undefined) {
             if (Object.keys(currentAudit.audit).length) {
@@ -128,7 +127,7 @@ const FormSelectAudit = () => {
             }
         }
 
-    }, [state, formValues, currentAudit, dispatch_SET_AUDIT, saveFormIntoCurrentAudit])
+    }, [state, formValues, currentAudit, dispatch_SET_AUDIT, saveFormIntoCurrentAudit, getLocalStorage])
 
 
 

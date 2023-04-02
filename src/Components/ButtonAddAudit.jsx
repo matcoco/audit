@@ -12,6 +12,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 
+
 const ButtonAddAudit = () => {
   const [show, setShow] = useState(false)
   const [styleAudit, setStyleAudit] = useState("")
@@ -21,7 +22,8 @@ const ButtonAddAudit = () => {
   const [checkboxAudit, setCheckBoxAudit] = useState([])
   const [auditeur, setAuditeur] = useState([])
   const [demandeur, setDemandeur] = useState([])
-  const [startDate, setStartDate] = useState(new Date());
+  const [dateDemand,] = useState(new Date());
+  const [date, setDate] = useState("")
   const [datas, setDatas] = useState({
     "auditeur": "",
     "demandeur": ""
@@ -58,6 +60,7 @@ const ButtonAddAudit = () => {
         let data = {
           gbook,
           category: styleAudit,
+          dateDemand: date,
           startAudit: false,
           progress: 0,
           status: 1,
@@ -110,10 +113,10 @@ const ButtonAddAudit = () => {
   }, [gbook, verifyUniqueGbook])
 
   const btnAudit = () => {
-    let storage = getLocalStorage()[0]
-    let auditeurs = storage.auditeur.length
-    let demandeurs = storage.demandeur.length
-    let category = Object.keys(storage.forms).length
+    let storage = getLocalStorage()[0] ?? []
+    let auditeurs = storage?.auditeur?.length ?? 0
+    let demandeurs = storage?.demandeur?.length ?? 0
+    let category = demandeurs ? Object.keys(storage.forms)?.length : 0
 
     if (auditeurs !== 0 && demandeurs !== 0 && category !== 0) {
       return (<Button variant="outline-primary" onClick={handleShow}>NOUVEL AUDIT</Button>)
@@ -121,6 +124,11 @@ const ButtonAddAudit = () => {
       return (<Button variant="outline-primary" disabled>NOUVEL AUDIT</Button>)
 
     }
+  }
+
+  const handleDateDemand = (date) => {
+    let newDate = date.toLocaleDateString()
+    setDate(date => newDate)
   }
 
   return (
@@ -140,7 +148,7 @@ const ButtonAddAudit = () => {
                   <Form.Label>Date de la demande</Form.Label>
                 </Col>
                 <Col>
-                  <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
+                  <DatePicker selected={dateDemand} onChange={(date) => handleDateDemand(date)} />
                 </Col>
               </Row>
               <Row>
@@ -213,6 +221,7 @@ const ButtonAddAudit = () => {
           </Modal.Footer>
         </Modal>
       </div>
+
     </>
   );
 }
