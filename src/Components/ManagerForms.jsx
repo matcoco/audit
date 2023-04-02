@@ -94,7 +94,6 @@ const ManagerForms = () => {
     }
 
     const fieldChoice = (item) => {
-        console.log(formsSelected)
         if (verificationDoubs(item.name, formsSelected)) {
             submit([...formsSelected, item])
         } else {
