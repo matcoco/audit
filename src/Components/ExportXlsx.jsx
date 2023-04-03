@@ -87,7 +87,7 @@ const ExportXlsx = () => {
             const date2String = data.dateFinAudit
             const date1 = parseDateString(date1String);
             const date2 = parseDateString(date2String);
-            obj.dureeDeTraitementDePriseEnCharge = isNaN(calculDiffDate(date1, date2).toString()) ? 0 : calculDiffDate(date1, date2).toString()
+            obj.dureeDeTraitementDePriseEnCharge = isNaN(calculDiffDate(date1, date2).toString()) ? 0 : Math.round(calculDiffDate(date1, date2)).toString()
             obj.statutDemande =  statutDemandeConvert(data.status)
             for (let item in data.audit) {
                 if (item === "commentServ") {

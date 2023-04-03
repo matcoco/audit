@@ -13,6 +13,7 @@ import { FormGroup } from 'react-bootstrap';
 
 
 
+
 const ButtonAddAudit = () => {
   const [show, setShow] = useState(false)
   const [styleAudit, setStyleAudit] = useState("")
@@ -22,8 +23,7 @@ const ButtonAddAudit = () => {
   const [checkboxAudit, setCheckBoxAudit] = useState([])
   const [auditeur, setAuditeur] = useState([])
   const [demandeur, setDemandeur] = useState([])
-  const [dateDemand,] = useState(new Date());
-  const [date, setDate] = useState("")
+  const [dateDemand, setDateDemand ] = useState(new Date());
   const [datas, setDatas] = useState({
     "auditeur": "",
     "demandeur": ""
@@ -37,6 +37,7 @@ const ButtonAddAudit = () => {
   }
 
   const onChange = (event) => {
+    event.preventDefault();
     setGbook(event.target.value);
   };
 
@@ -51,6 +52,11 @@ const ButtonAddAudit = () => {
     setStyleAudit(styleAudit => event.target.id)
   }
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    }
+  };
 
 
   const submit = () => {
@@ -60,7 +66,7 @@ const ButtonAddAudit = () => {
         let data = {
           gbook,
           category: styleAudit,
-          dateDemand: date,
+          dateDemand: formatDate(dateDemand),
           startAudit: false,
           progress: 0,
           status: 1,
@@ -126,9 +132,16 @@ const ButtonAddAudit = () => {
     }
   }
 
+  const formatDate = (date) => {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+  
+    return `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+  }
+
   const handleDateDemand = (date) => {
-    let newDate = date.toLocaleDateString()
-    setDate(date => newDate)
+    setDateDemand(dateDemand => date)
   }
 
   return (
@@ -145,7 +158,7 @@ const ButtonAddAudit = () => {
             <div>
               <FormGroup>
                 <Form.Label><p>Date de la demande</p></Form.Label>
-                <DatePicker className="datePicker" selected={dateDemand} onChange={(date) => handleDateDemand(date)} />
+                <DatePicker className="datePicker" selected={dateDemand} onChange={(dateDemand) => handleDateDemand(dateDemand)} />
               </FormGroup>
               <FormGroup>
                 <Form.Label><p>Auditeur</p></Form.Label>
@@ -177,7 +190,7 @@ const ButtonAddAudit = () => {
             <Form>
               <Form.Group className="mb-3" controlId="inputGbook">
                 <Form.Label><p>GBOOK</p></Form.Label>
-                <Form.Control ref={inputRef} type="number" onChange={onChange} />
+                <Form.Control ref={inputRef} type="number" onChange={onChange}  onKeyDown={handleKeyDown}/>
               </Form.Group>
               <div>
                 {checkboxAudit && checkboxAudit.map((item, index) => {
