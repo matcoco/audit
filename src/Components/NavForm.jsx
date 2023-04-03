@@ -2,17 +2,17 @@ import React from 'react';
 import Nav from 'react-bootstrap/Nav';
 import { IconContext } from 'react-icons'
 import { AiFillHome } from "react-icons/ai";
-
+import { NavLink } from 'react-router-dom';
 
 const NavForm = () => {
     return (
         <Nav>
             <Nav.Item>
-                <Nav.Link href={"/"}>
+                <NavLink to="/">
                     <IconContext.Provider value={{ color: "black", size: 40 }}>
-                        <AiFillHome  />
+                        <AiFillHome />
                     </IconContext.Provider>
-                </Nav.Link>
+                </NavLink>
             </Nav.Item>
         </Nav>
     );
