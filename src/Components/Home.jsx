@@ -104,11 +104,11 @@ const Home = () => {
   return (
     <Container className="App">
       <div className='main-header'>
-        <div>
+        <div className='btnHome'>
           <div className='main-Btn-add-audit'><ButtonAddAudit /></div>
-          <div className=""><ExportXlsx /></div>
+          <div className="btnExport"><ExportXlsx /></div>
         </div>
-        <div style={{ width: '355px' }}>
+        <div className='chart'>
           <Chart auditCount={auditCount} />
         </div>
       </div>

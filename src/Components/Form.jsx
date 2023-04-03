@@ -7,15 +7,15 @@ import ProgressBarComp from "./ProgressBarComp";
 import './NavForm.css'
 import * as moment from 'moment'
 import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
+import { Container, FormGroup } from "react-bootstrap";
+import "./Form.css"
 
 
 const FormSelectAudit = () => {
     const { gbook } = useParams();
     const [currentAudit, setCurrentAudit] = useState({})
     const [saveLocale, setSaveLocale] = useState({})
-    const [, setProgressBar] = useState(0)
+    const [/* progressBar */, setProgressBar] = useState(0)
     const { state, dispatch, getLocalStorage } = useContext(myContext);
     const [categoryForm, setCategoryForm] = useState([])
     const [formValues, setFormValues] = useState({});
@@ -54,6 +54,7 @@ const FormSelectAudit = () => {
     const findCurrentAudit_func = useCallback((locale) => {
         for (let item of locale[0].datas) {
             if (item.gbook === gbook) {
+                console.log(item)
                 setCurrentAudit(item)
                 setSaveLocale(item)
                 if (item.hasOwnProperty('audit')) {
@@ -118,7 +119,7 @@ const FormSelectAudit = () => {
     useEffect(() => {
         let objectsCategory = state[0].forms
         let category = currentAudit.category
-
+        console.log(getLocalStorage()[0])
         setCategoryForm(objectsCategory[category])
         saveFormIntoCurrentAudit()
         if (currentAudit.audit !== undefined) {
@@ -135,44 +136,38 @@ const FormSelectAudit = () => {
         if (field.type === 'select') {
             return (
                 <div key={field.name}>
-                    <Row>
-                        <Col>
-                            <Form.Label>{field.label}</Form.Label>
-                        </Col>
-                        <Col>
-                            <Form.Select
-                                id={field.name}
-                                name={field.name}
-                                onChange={handleChange}
-                                value={formValues[field?.name] || ''}
-                            >
-                                {field?.options?.map((option) => (
-                                    <option key={option} value={option}>
-                                        {option}
-                                    </option>
-                                ))}
-                            </Form.Select></Col>
-                    </Row>
+                    <FormGroup className="mb-2 mt-2">
+                        <Form.Label><p>{field.label}</p></Form.Label>
+                        <Form.Select
+                            className="forms"
+                            id={field.name}
+                            name={field.name}
+                            onChange={handleChange}
+                            value={formValues[field?.name] || ''}
+                        >
+                            {field?.options?.map((option) => (
+                                <option key={option} value={option}>
+                                    {option}
+                                </option>
+                            ))}
+                        </Form.Select>
+                    </FormGroup>
                 </div>
             );
         } else {
             return (
                 <div key={field.name}>
-                    <Row>
-                        <Col>
-                            <Form.Label>{field.label}</Form.Label>
-                        </Col>
-                        <Col>
-                            <Form.Control
-                                type={field.type}
-                                id={field.name}
-                                name={field.name}
-                                onChange={handleChange}
-                                value={formValues[field.name] || ''}
-                            />
-
-                        </Col>
-                    </Row>
+                    <FormGroup className="mb-2 mt-2">
+                        <Form.Label><p>{field.label}</p></Form.Label>
+                        <Form.Control
+                            className="forms"
+                            type={field.type}
+                            id={field.name}
+                            name={field.name}
+                            onChange={handleChange}
+                            value={formValues[field.name] || ''}
+                        />
+                    </FormGroup>
                 </div>
             );
         }
@@ -194,21 +189,21 @@ const FormSelectAudit = () => {
     }, [currentAudit.category])
     return (
         <>
-            <div>
+            <Container>
                 <div>
                     <NavForm />
-                    <div>
-                        <h2>{gbook}</h2>
-                        <div>
+                    <div className="main-header-form">
+                        <h2 className="gbook-title">{gbook}</h2>
+                        <div className="main-progress-bar">
                             <ProgressBarComp data={currentAudit} />
                         </div>
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit}>
+                <form className="main-forms" onSubmit={handleSubmit}>
                     {categoryForm && categoryForm.length !== 0 ? formFields : askConfigForm}
                 </form>
-            </div>
+            </Container>
         </>
     )
 }

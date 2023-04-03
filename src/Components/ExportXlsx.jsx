@@ -102,7 +102,7 @@ const ExportXlsx = () => {
 
 
     return (
-        <div><Button variant="outline-primary" onClick={handleExportXLSX} disabled={storage === undefined ? true : false}>EXPORTER</Button></div>
+        <div><Button variant="outline-primary" onClick={handleExportXLSX} disabled={storage === undefined ? true : false}><p className="btn-home-title">EXPORTER</p></Button></div>
     )
 }
 

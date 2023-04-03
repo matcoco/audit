@@ -40,13 +40,13 @@ const Cards = ({ data, deleteCard }) => {
         <div className={`container-card ${color}`}>
             <div className="main-first-card">
                 <div className="first-card">
-                    <h2>{data.gbook}</h2>
+                    <h2 className="gbook-card">{data.gbook}</h2>
                     <p>{data.category}</p>
                 </div>
                 <div className="middle-card"><h2>{progressNumber(data)}%</h2></div>
                 <div className="end-card">
                     <div>
-                        <Button variant="outline-primary audit-btn" onClick={() => navigatePage()}>AUDITER</Button>
+                        <Button variant="outline-primary audit-btn" onClick={() => navigatePage()}><p>AUDITER</p></Button>
                     </div>
                     <div className="btn-func">
                         <div className="edit">
