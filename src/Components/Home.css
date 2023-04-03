@@ -1,6 +1,7 @@
 .main-header{
     display: flex;
     justify-content: space-between; 
+    margin-top: 20px;
 }
 
 .pic-no-data{
@@ -11,3 +12,31 @@
 .pic-no-data img{
     width: 150px;
 }
+
+.btnHome{
+    display: flex;
+}
+
+.btnExport {
+    margin-left: 10px;
+}
+
+@media (max-width: 576px) {
+    .btn-home-title{
+        font-size: small;
+    }
+
+    .chart{
+        width:200px
+    }
+
+    .main-header{
+        flex-direction: column;
+        padding: 2em 0 2em 0;
+        align-items: center;
+    }
+
+    .btnHome{
+        margin-bottom: 20px;
+    }
+  }

@@ -6,10 +6,10 @@ import { myContext } from "../context/Context"
 import { ADD_AUDIT } from '../reducer/ActionsType';
 import * as moment from 'moment'
 import { toast } from "react-toastify"
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import "./ButtonAddAudit.css"
+import { FormGroup } from 'react-bootstrap';
 
 
 
@@ -119,9 +119,9 @@ const ButtonAddAudit = () => {
     let category = demandeurs ? Object.keys(storage.forms)?.length : 0
 
     if (auditeurs !== 0 && demandeurs !== 0 && category !== 0) {
-      return (<Button variant="outline-primary" onClick={handleShow}>NOUVEL AUDIT</Button>)
+      return (<Button variant="outline-primary" onClick={handleShow}><p className="btn-home-title">AUDIT</p></Button>)
     } else {
-      return (<Button variant="outline-primary" disabled>NOUVEL AUDIT</Button>)
+      return (<Button variant="outline-primary" disabled><p className="btn-home-title">AUDIT</p></Button>)
 
     }
   }
@@ -139,56 +139,44 @@ const ButtonAddAudit = () => {
       <div>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Nouvel audit</Modal.Title>
+            <Modal.Title><p>Nouvel audit</p></Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div>
-              <Row>
-                <Col>
-                  <Form.Label>Date de la demande</Form.Label>
-                </Col>
-                <Col>
-                  <DatePicker selected={dateDemand} onChange={(date) => handleDateDemand(date)} />
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <Form.Label>Auditeur</Form.Label>
-                </Col>
-                <Col>
-                  <Form.Select aria-label="filtre" className='main-select-filter' onChange={onChangeDatas} name="auditeur">
-                    <option value={""} ></option>
-                    {
-                      auditeur.length > 0 && auditeur.map((item, index) => {
-                        return (
-                          <option key={index} value={item} >{item}</option>
-                        )
-                      })
-                    }
-                  </Form.Select>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <Form.Label>Demandeur</Form.Label>
-                </Col>
-                <Col>
-                  <Form.Select aria-label="filtre" className='main-select-filter' onChange={onChangeDatas} name="demandeur">
-                    <option value={""} ></option>
-                    {
-                      demandeur.length > 0 && demandeur.map((item, index) => {
-                        return (
-                          <option key={index} value={item} >{item}</option>
-                        )
-                      })
-                    }
-                  </Form.Select>
-                </Col>
-              </Row>
+              <FormGroup>
+                <Form.Label><p>Date de la demande</p></Form.Label>
+                <DatePicker className="datePicker" selected={dateDemand} onChange={(date) => handleDateDemand(date)} />
+              </FormGroup>
+              <FormGroup>
+                <Form.Label><p>Auditeur</p></Form.Label>
+                <Form.Select aria-label="filtre" className='main-select-filter' onChange={onChangeDatas} name="auditeur">
+                  <option value={""} ></option>
+                  {
+                    auditeur.length > 0 && auditeur.map((item, index) => {
+                      return (
+                        <option key={index} value={item} >{item}</option>
+                      )
+                    })
+                  }
+                </Form.Select>
+              </FormGroup>
+              <FormGroup>
+                <Form.Label><p>Demandeur</p></Form.Label>
+                <Form.Select aria-label="filtre" className='main-select-filter' onChange={onChangeDatas} name="demandeur">
+                  <option value={""} ></option>
+                  {
+                    demandeur.length > 0 && demandeur.map((item, index) => {
+                      return (
+                        <option key={index} value={item} >{item}</option>
+                      )
+                    })
+                  }
+                </Form.Select>
+              </FormGroup>
             </div>
             <Form>
               <Form.Group className="mb-3" controlId="inputGbook">
-                <Form.Label>GBOOK</Form.Label>
+                <Form.Label><p>GBOOK</p></Form.Label>
                 <Form.Control ref={inputRef} type="number" onChange={onChange} />
               </Form.Group>
               <div>
@@ -211,12 +199,12 @@ const ButtonAddAudit = () => {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
-              Fermer
+              <p>Fermer</p>
             </Button>
             <Button
               variant="primary"
               onClick={submit}>
-              Valider
+              <p>Valider</p>
             </Button>
           </Modal.Footer>
         </Modal>

@@ -1,0 +1,24 @@
+.main-forms {
+    display: flex;
+    flex-direction: column;
+}
+
+.forms {
+    width: 40%;
+}
+
+.gbook-title {
+    font-size: 2em;
+    padding: 20px 0 20px 0;
+}
+
+.main-progress-bar {
+    padding: 20px 0 20px 0;
+}
+
+
+@media (max-width: 1000px) {
+    .forms {
+        width: 100%;
+    }
+}
