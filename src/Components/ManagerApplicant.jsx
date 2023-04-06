@@ -8,6 +8,9 @@ import Form from 'react-bootstrap/Form';
 import { toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.min.css';
 import { ToastContainer } from 'react-toastify';
+import "./SettingsPage.css"
+import { AiFillDelete, AiFillEdit, AiOutlinePlus } from "react-icons/ai";
+import { IconContext } from 'react-icons'
 
 const ManagerApplicant = () => {
     const { state, dispatch, getLocalStorage } = useContext(myContext)
@@ -47,16 +50,16 @@ const ManagerApplicant = () => {
 
     const submitEditForm = () => {
 
-        dispatch({ type: MANAGER_APPLICANT, payload: { action: "edit", storage: getLocalStorage(), demandeur : applicantName, index : applicantNameIndex } })
+        dispatch({ type: MANAGER_APPLICANT, payload: { action: "edit", storage: getLocalStorage(), demandeur: applicantName, index: applicantNameIndex } })
         toast.success("Modification validé !.", { closeOnClick: true, autoClose: 2000, })
         handleCloseEdit()
     }
 
 
-    const deleteAuditor = (event) => {
-        let v_auditors = demandeurs.filter(item => item !== event.target.id)
-        setDemandeurs(demandeurs => v_auditors)
-        dispatch({ type: MANAGER_APPLICANT, payload: { action: "delete", array: v_auditors } })
+    const deleteApplicant = (v_item) => {
+        let v_demandeurs = demandeurs.filter(item => item !== v_item)
+        setDemandeurs(demandeurs => v_demandeurs)
+        dispatch({ type: MANAGER_APPLICANT, payload: { action: "delete", array: v_demandeurs } })
     }
 
     const AddapplicantName = () => {
@@ -68,9 +71,11 @@ const ManagerApplicant = () => {
 
     return (
         <div>
-            <h2>demandeurs</h2>
-            <Button variant="primary" onClick={handleShow}>
-                Ajouter
+            <h2 className="settings-title">demandeurs</h2>
+            <Button className="btn-settingsPage" variant="outline-primary" onClick={handleShow}>
+                <IconContext.Provider className="delete" value={{ size: 20 }}>
+                    <AiOutlinePlus />
+                </IconContext.Provider>
             </Button>
 
             <Modal show={show} onHide={handleClose}>
@@ -121,20 +126,30 @@ const ManagerApplicant = () => {
             <Table striped bordered hover>
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Prénom</th>
-                        <th>Editer</th>
-                        <th>Supprimer</th>
+                        <th><p>Prénom</p></th>
+                        <th><p>Editer</p></th>
+                        <th><p>Supprimer</p></th>
                     </tr>
                 </thead>
                 <tbody>
                     {
                         demandeurs.map((item, index) => (
                             <tr key={index}>
-                                <td>{index + 1}</td>
-                                <td>{item}</td>
-                                <td><button onClick={() => handleShowEdit(index)}>*</button></td>
-                                <td><button id={item} onClick={deleteAuditor}>-</button></td>
+                                <td className="offset_tab"><p>{item}</p></td>
+                                <td>
+                                    <Button className="btn-settings-op" variant="outline-primary" onClick={() => handleShowEdit(index)}>
+                                        <IconContext.Provider value={{ color: "orange", size: 20 }}>
+                                            <AiFillEdit />
+                                        </IconContext.Provider>
+                                    </Button>
+                                </td>
+                                <td>
+                                    <Button className="btn-settings-op" variant="outline-primary" onClick={() => deleteApplicant(item)}>
+                                        <IconContext.Provider className="delete" value={{ color: "red", size: 20 }}>
+                                            <AiFillDelete />
+                                        </IconContext.Provider>
+                                    </Button>
+                                </td>
                             </tr>
                         ))
                     }

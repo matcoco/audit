@@ -17,14 +17,14 @@ function NavGlobal() {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="">
                         <NavLink to="/">
-                            <IconContext.Provider className="delete" value={{ color: "red", size: 20 }}>
+                            <IconContext.Provider className="delete" value={{ color: "red", size: 30 }}>
                                 <AiOutlineHome />
                             </IconContext.Provider>
                         </NavLink>
                     </Nav>
                     <NavLink to="/settings">
                         <Nav className="">
-                            <IconContext.Provider className="delete" value={{ color: "red", size: 20 }}>
+                            <IconContext.Provider className="delete" value={{ color: "red", size: 30 }}>
                                 <AiOutlineSetting />
                             </IconContext.Provider>
                         </Nav>

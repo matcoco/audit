@@ -10,9 +10,13 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import { ToastContainer } from 'react-toastify';
 import Papa from "papaparse"
 import uniqid from 'uniqid';
+import { AiOutlineLeft, AiOutlinePlus, AiFillEdit, AiFillDelete, AiOutlinePlusCircle } from "react-icons/ai";
+import { IconContext } from 'react-icons'
+import { Container } from "react-bootstrap";
+import "./SettingsPage.css"
 
 const ManagerForms = () => {
-    const { state, dispatch, getLocalStorage, verificationDoubs } = useContext(myContext)
+    const { state, dispatch, getLocalStorage, verificationDoubs, navigationPage } = useContext(myContext)
     const [show, setShow] = useState(false);
     const [showEditForm, setShowEditForm] = useState(false);
     const [label, setLabel] = useState("")
@@ -58,7 +62,7 @@ const ManagerForms = () => {
             setCatSelected(catSelected => cat_select)
             setFormsSelected(formsSelected => forms[`${cat_select}`])
             setCategorySelected(categorySelected => cat_select)
-     
+
         }
 
     }, [state, getLocalStorage])
@@ -150,7 +154,7 @@ const ManagerForms = () => {
         let newArray = []
         let selectType = {}
         for (let item of array) {
-            
+
             if (item.type === SELECT) {
                 selectType = Object.assign(item)
                 selectType.options = options
@@ -166,138 +170,179 @@ const ManagerForms = () => {
         dispatch({ type: MANAGER_FORMS_CSV, payload: { data: newArray, storage: getLocalStorage() } })
     }
 
+    const navigation = () => {
+        navigationPage("/settings")
+    }
+
     return (
-        <div>
+        <Container>
+            <div className="btn-return-settings">
+                <Button variant="outline-primary" onClick={() => navigation()}>
+                    <IconContext.Provider value={{ size: 20 }}>
+                        <AiOutlineLeft />
+                    </IconContext.Provider>
+                </Button>
+            </div>
             <div>
                 <Form.Group controlId="formFile" className="mb-3">
-                    <Form.Label>Importation formulaire</Form.Label>
+                    <Form.Label><p className="settings-title">Importation champs de formulaire</p></Form.Label>
                     <Form.Control type="file" onChange={csvReader} />
                 </Form.Group>
             </div>
-            <h2>Gestionnaire de formulaire</h2>
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>Libellé</th>
-                        <th>Nom</th>
-                        <th>Type</th>
-                        <th>Editer</th>
-                        <th>Supprimer</th>
-                        <th>Ajouter</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        forms && forms.map((item, index) => (
-                            <tr key={index}>
-                                <td>{item.label}</td>
-                                <td>{item.name}</td>
-                                <td>{item.type === TEXT ? "Saisie texte" : "Menu déroulant"}</td>
-                                <td><button onClick={() => handleShowEditForm(index)}>*</button></td>
-                                <td><button onClick={() => deleteElementForm(index)}>-</button></td>
-                                <td><button onClick={() => fieldChoice(item)}>+</button></td>
-                            </tr>
-                        ))
-                    }
-                </tbody>
-            </Table>
-            <Button variant="primary" onClick={handleShow}>
-                Ajouter
-            </Button>
+            <h2 className="settings-title">Gestionnaire de formulaire</h2>
+            <div className="table-scrollable">
+                <Table striped bordered hover>
+                    <thead>
+                        <tr>
+                            <th><p>Libellé</p></th>
+                            <th><p>Nom</p></th>
+                            <th><p>Type</p></th>
+                            <th><p>Editer</p></th>
+                            <th><p>Supprimer</p></th>
+                            <th><p>Ajouter</p></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            forms && forms.map((item, index) => (
+                                <tr key={index}>
+                                    <td><p>{item.label}</p></td>
+                                    <td><p>{item.name}</p></td>
+                                    <td><p>{item.type === TEXT ? "Saisie texte" : "Menu déroulant"}</p></td>
+                                    <td>
+                                        <Button className="btn-settings-op" variant="outline-primary" onClick={() => handleShowEditForm(index)}>
+                                            <IconContext.Provider value={{ color: "orange", size: 20 }}>
+                                                <AiFillEdit />
+                                            </IconContext.Provider>
+                                        </Button>
+                                    </td>
+                                    <td>
+                                        <Button className="btn-settings-op" variant="outline-primary" onClick={() => deleteElementForm(index)}>
+                                            <IconContext.Provider className="delete" value={{ color: "red", size: 20 }}>
+                                                <AiFillDelete />
+                                            </IconContext.Provider>
+                                        </Button>
+                                    </td>
+                                    <td>
+                                        <Button className="btn-settings-op" variant="outline-primary" onClick={() => fieldChoice(item)}>
+                                            <IconContext.Provider value={{ size: 20 }}>
+                                                <AiOutlinePlusCircle />
+                                            </IconContext.Provider>
+                                        </Button>
+                                    </td>
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </Table>
+            </div>
+            <div className="btn-add-field-settings">
+                <Button variant="outline-primary" onClick={handleShow}>
+                    <IconContext.Provider value={{ size: 20 }}>
+                        <AiOutlinePlus />
+                    </IconContext.Provider>
+                </Button>
+            </div>
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Ajout un formulaire</Modal.Title>
+                    <Modal.Title><p>Ajout un formulaire</p></Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group className="mb-3" controlId="formLabel">
-                        <Form.Label>Label</Form.Label>
+                        <Form.Label><p>Label</p></Form.Label>
                         <Form.Control type="text" onChange={handleChangeLabel} />
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formName">
-                        <Form.Label>Nom</Form.Label>
+                        <Form.Label><p>Nom</p></Form.Label>
                         <Form.Control type="text" onChange={handleChangeName} />
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formMenu">
-                        <Form.Label>Type</Form.Label>
+                        <Form.Label><p>Type</p></Form.Label>
                         <Form.Select aria-label="Default select example" onChange={handleChangeForm}>
-                            <option>Selectionner le type du champs</option>
-                            <option value={TEXT}>Texte</option>
-                            <option value={SELECT}>Menu déroulant</option>
+                            <option><p>Selectionner le type du champs</p></option>
+                            <option value={TEXT}><p>Texte</p></option>
+                            <option value={SELECT}><p>Menu déroulant</p></option>
                         </Form.Select>
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
-                        Fermer
+                        <p>Fermer</p>
                     </Button>
-                    <Button variant="primary" onClick={addForm}>
-                        Ajouter
+                    <Button variant="outline-primary" onClick={addForm}>
+                        <p>Ajouter</p>
                     </Button>
                 </Modal.Footer>
             </Modal>
 
             <Modal show={showEditForm} onHide={handleCloseEditForm}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Modifier un formulaire</Modal.Title>
+                    <Modal.Title><p>Modifier un formulaire</p></Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group className="mb-3" controlId="formLabel">
-                        <Form.Label>Label</Form.Label>
+                        <Form.Label><p>Label</p></Form.Label>
                         <Form.Control type="text" onChange={handleChangeLabel} value={label} />
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formName" >
-                        <Form.Label>Nom</Form.Label>
+                        <Form.Label><p>Nom</p></Form.Label>
                         <Form.Control type="text" onChange={handleChangeName} value={name} />
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formMenu">
-                        <Form.Label>Type</Form.Label>
+                        <Form.Label><p>Type</p></Form.Label>
                         <Form.Select aria-label="Default select example" onChange={handleChangeForm} value={type}>
-                            <option>Selectionner le type du champs</option>
-                            <option value={TEXT}>Texte</option>
-                            <option value={SELECT}>Menu déroulant</option>
+                            <option><p>Selectionner le type du champs</p></option>
+                            <option value={TEXT}><p>Texte</p></option>
+                            <option value={SELECT}><p>Menu déroulant</p></option>
                         </Form.Select>
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseEditForm}>
-                        Fermer
+                        <p>Fermer</p>
                     </Button>
                     <Button variant="primary" onClick={submitEditForm}>
-                        Valider
+                        <p>Valider</p>
                     </Button>
                 </Modal.Footer>
             </Modal>
-            <h2>CATEGORIE {catSelected.toUpperCase()}</h2>
+            <h2 className="settings-title">CATEGORIE {catSelected.toUpperCase()}</h2>
             <h2>Ajout des champs pour formulaire sélectionné</h2>
             <Table striped bordered hover>
                 <thead>
                     <tr>
-                        <th>Libellé</th>
-                        <th>Nom</th>
-                        <th>Type</th>
-                        <th>Supprimer</th>
+                        <th><p>Libellé</p></th>
+                        <th><p>Nom</p></th>
+                        <th><p>Type</p></th>
+                        <th><p>Supprimer</p></th>
                     </tr>
                 </thead>
                 <tbody>
                     {
                         formsSelected && formsSelected.map((item, index) => (
                             <tr key={index}>
-                                <td>{item.label}</td>
-                                <td>{item.name}</td>
-                                <td>{item.type === TEXT ? "Saisie texte" : "Menu déroulant"}</td>
-                                <td><button id={item} onClick={() => deleteElement(index)}>-</button></td>
+                                <td><p>{item.label}</p></td>
+                                <td><p>{item.name}</p></td>
+                                <td><p>{item.type === TEXT ? "Saisie texte" : "Menu déroulant"}</p></td>
+                                <td>
+                                    <Button className="btn-settings-op" variant="outline-primary" id={item} onClick={() => deleteElement(index)}>
+                                        <IconContext.Provider className="delete" value={{ color: "red", size: 20 }}>
+                                            <AiFillDelete />
+                                        </IconContext.Provider>
+                                    </Button>
+                                </td>
                             </tr>
                         ))
                     }
                 </tbody>
             </Table>
             <ToastContainer />
-        </div>
+        </Container>
     )
 }
 
