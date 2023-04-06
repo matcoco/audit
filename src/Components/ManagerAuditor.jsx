@@ -8,6 +8,9 @@ import Form from 'react-bootstrap/Form';
 import { toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.min.css';
 import { ToastContainer } from 'react-toastify';
+import "./SettingsPage.css"
+import { AiFillDelete, AiFillEdit, AiOutlinePlus } from "react-icons/ai";
+import { IconContext } from 'react-icons'
 
 const ManagerAuditor = () => {
     const { state, dispatch, getLocalStorage } = useContext(myContext)
@@ -33,9 +36,9 @@ const ManagerAuditor = () => {
     }
 
     const handleChangeAuditorName = (event) => setAuditorName(auditorName => event.target.value)
-    
+
     const submitEditForm = () => {
-        dispatch({ type: MANAGER_AUDITOR, payload: { action: "edit", storage: getLocalStorage(), auditeur : auditorName, index : auditorNameIndex } })
+        dispatch({ type: MANAGER_AUDITOR, payload: { action: "edit", storage: getLocalStorage(), auditeur: auditorName, index: auditorNameIndex } })
         toast.success("Modification validé !.", { closeOnClick: true, autoClose: 2000, })
         handleCloseEdit()
     }
@@ -50,8 +53,8 @@ const ManagerAuditor = () => {
     }, [state, getLocalStorage])
 
 
-    const deleteAuditor = (event) => {
-        let v_auditors = auditeurs.filter(item => item !== event.target.id)
+    const deleteAuditor = (v_item) => {
+        let v_auditors = auditeurs.filter(item => item !== v_item)
         setAuditeurs(auditeurs => v_auditors)
         dispatch({ type: MANAGER_AUDITOR, payload: { action: "delete", array: v_auditors } })
     }
@@ -62,75 +65,86 @@ const ManagerAuditor = () => {
         dispatch({ type: MANAGER_AUDITOR, payload: { action: "add", array: arrayName } })
     }
 
-
     return (
         <div>
-            <h2>Auditeurs</h2>
-            <Button variant="primary" onClick={handleShow}>
-                Ajouter
+            <h2 className="settings-title">Auditeurs</h2>
+            <Button className="btn-settingsPage" variant="outline-primary" onClick={handleShow}>
+            <IconContext.Provider value={{ size: 20 }}>
+                    <AiOutlinePlus />
+                </IconContext.Provider>
             </Button>
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Ajouter un auditeur</Modal.Title>
+                    <Modal.Title><p>Ajouter un auditeur</p></Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
 
                     <Form>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                            <Form.Label>Prénom</Form.Label>
+                            <Form.Label><p>Prénom</p></Form.Label>
                             <Form.Control type="text" onChange={handleChangeAuditorName} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
-                        Fermer
+                        <p>Fermer</p>
                     </Button>
-                    <Button variant="primary" onClick={validationClick}>
-                        Ajouter
+                    <Button variant="outline-primary" onClick={validationClick}>
+                        <p>Ajouter</p>
                     </Button>
                 </Modal.Footer>
             </Modal>
             <Modal show={showEdit} onHide={handleCloseEdit}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Modifier un auditeur</Modal.Title>
+                    <Modal.Title><p>Modifier un auditeur</p></Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
 
                     <Form>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                            <Form.Label>Prénom</Form.Label>
+                            <Form.Label><p>Prénom</p></Form.Label>
                             <Form.Control type="text" onChange={handleChangeAuditorName} value={auditorName} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseEdit}>
-                        Fermer
+                        <p>Fermer</p>
                     </Button>
-                    <Button variant="primary" onClick={submitEditForm}>
-                        Valider
+                    <Button variant="outline-primary" onClick={submitEditForm}>
+                        <p>Valider</p>
                     </Button>
                 </Modal.Footer>
             </Modal>
             <Table striped bordered hover>
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Prénom</th>
-                        <th>Editer</th>
-                        <th>Supprimer</th>
+                        <th><p>Prénom</p></th>
+                        <th><p>Editer</p></th>
+                        <th><p>Supprimer</p></th>
                     </tr>
                 </thead>
                 <tbody>
                     {
                         auditeurs.map((item, index) => (
                             <tr key={index}>
-                                <td>{index + 1}</td>
-                                <td>{item}</td>
-                                <td><button onClick={() => handleShowEdit(index)}>*</button></td>
-                                <td><button id={item} onClick={deleteAuditor}>-</button></td>
+                                <td className="offset_tab"><p>{item}</p></td>
+                                <td>
+                                    <Button className="btn-settings-op" variant="outline-primary" onClick={() => handleShowEdit(index)}>
+                                        <IconContext.Provider value={{ color: "orange", size: 20 }}>
+                                            <AiFillEdit />
+                                        </IconContext.Provider>
+                                    </Button>
+                                </td>
+                                <td>
+                                    <Button className="btn-settings-op" variant="outline-primary" onClick={() => deleteAuditor(item)}>
+                                        <IconContext.Provider className="delete" value={{ color: "red", size: 20 }}>
+                                            <AiFillDelete />
+                                        </IconContext.Provider>
+                                    </Button>
+                                </td>
                             </tr>
                         ))
                     }

@@ -5,6 +5,10 @@ import { MANAGER_CATEGORIES_FORMS, MANAGER_FORMS_SET_CATEGORY_SELECTED } from ".
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import "./SettingsPage.css"
+import { AiFillDelete, AiFillEdit, AiOutlineSetting, AiOutlinePlus } from "react-icons/ai";
+import { IconContext } from 'react-icons'
+
 
 
 const ManagerCategoriesAndForms = () => {
@@ -49,9 +53,9 @@ const ManagerCategoriesAndForms = () => {
     }, [state, getLocalStorage])
 
 
-    const deleteCategorie = (event) => {
-        let arrayCategories = arrayCB.filter(item => item.label !== event.target.id)
-        dispatch({ type: MANAGER_CATEGORIES_FORMS, payload: { action: "delete_category", array: arrayCategories, value: event.target.id } })
+    const deleteCategorie = (v_item) => {
+        let arrayCategories = arrayCB.filter(item => item.label !== v_item)
+        dispatch({ type: MANAGER_CATEGORIES_FORMS, payload: { action: "delete_category", array: arrayCategories, value: v_item } })
     }
 
     const AddCategorieName = () => {
@@ -61,9 +65,11 @@ const ManagerCategoriesAndForms = () => {
 
     return (
         <div>
-            <h2>Categories et formulaires</h2>
-            <Button variant="primary" onClick={handleShow}>
-                Ajouter
+            <h2 className="settings-title">Categories et formulaires</h2>
+            <Button className="btn-settingsPage" variant="outline-primary" onClick={handleShow}>
+                <IconContext.Provider className="delete" value={{ size: 20 }}>
+                    <AiOutlinePlus />
+                </IconContext.Provider>
             </Button>
 
             <Modal show={show} onHide={handleClose}>
@@ -91,22 +97,38 @@ const ManagerCategoriesAndForms = () => {
             <Table striped bordered hover>
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Catégories</th>
-                        <th>Editer</th>
-                        <th>Supprimer</th>
-                        <th>parametrer le formulaire</th>
+                        <th><p>Catégories</p></th>
+                        <th><p>Editer</p></th>
+                        <th><p>Supprimer</p></th>
+                        <th><p>parametrer le formulaire</p></th>
                     </tr>
                 </thead>
                 <tbody>
                     {
                         categories.map((item, index) => (
                             <tr key={index}>
-                                <td>{index + 1}</td>
-                                <td>{item}</td>
-                                <td><button >*</button></td>
-                                <td><button id={item} onClick={deleteCategorie}>-</button></td>
-                                <td><button id={item} onClick={() => navigation(item)}>+</button></td>
+                                <td className="offset_tab"><p>{item}</p></td>
+                                <td>
+                                    <Button className="btn-settings-op" variant="outline-primary">
+                                        <IconContext.Provider value={{ color: "orange", size: 20 }}>
+                                            <AiFillEdit />
+                                        </IconContext.Provider>
+                                    </Button>
+                                </td>
+                                <td>
+                                    <Button className="btn-settings-op" variant="outline-primary" onClick={() => deleteCategorie(item)}>
+                                        <IconContext.Provider className="delete" value={{ color: "red", size: 20 }}>
+                                            <AiFillDelete />
+                                        </IconContext.Provider>
+                                    </Button>
+                                </td>
+                                <td>
+                                    <button className="btn-settings-op" id={item} onClick={() => navigation(item)}>
+                                        <IconContext.Provider className="delete" value={{ size: 20 }}>
+                                            <AiOutlineSetting />
+                                        </IconContext.Provider>
+                                    </button>
+                                </td>
                             </tr>
                         ))
                     }

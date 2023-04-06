@@ -1,0 +1,43 @@
+
+.offset-tab {
+    flex: 0 1 50px;
+}
+
+table {
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  th, td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ccc;
+  }
+
+  .settings-title {
+    margin-top: 50px;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+  }
+
+  .btn-settingsPage{
+    margin-bottom: 10px;
+  }
+
+.btn-settings-op{
+    border:none
+}
+
+
+.table-scrollable {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.btn-return-settings{
+  margin-top: 50px;
+}
+
+.btn-add-field-settings{
+  margin-top: 20px;
+}

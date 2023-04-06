@@ -140,3 +140,7 @@ table {
 p, h2, select, input, label {
   font-family: 'Roboto', sans-serif;
 }
+
+th{
+  font-weight: bold;
+}

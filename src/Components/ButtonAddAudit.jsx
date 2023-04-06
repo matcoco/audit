@@ -215,7 +215,7 @@ const ButtonAddAudit = () => {
               <p>Fermer</p>
             </Button>
             <Button
-              variant="primary"
+              variant="outline-primary"
               onClick={submit}>
               <p>Valider</p>
             </Button>
