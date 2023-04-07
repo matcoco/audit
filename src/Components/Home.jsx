@@ -115,7 +115,7 @@ const Home = () => {
   const submit = () => {
     handleClose()
     dispatch({ type: DELETE_ALL_DATAS, payload: getLocalStorage() })
-    toast.error("Suppression confirmée !", { closeOnClick: true, autoClose: 2000, })
+    toast.success("Suppression confirmée !", { closeOnClick: true, autoClose: 2000, })
   };
 
   return (
@@ -124,7 +124,7 @@ const Home = () => {
         <div className='btnHome'>
           <div className='main-Btn-add-audit'><ButtonAddAudit /></div>
           <div className="btnExport"><ExportXlsx /></div>
-          <div><Button onClick={handleShow} className='btn-reset' variant="outline-primary"><p className="btn-home-title">RESET</p></Button></div>
+          <div><Button onClick={handleShow} className='btn-reset' variant="outline-danger" disabled={data.length === 0}><p className="btn-home-title">RESET</p></Button></div>
         </div>
         <div className='chart'>
           <Chart auditCount={auditCount} />
@@ -158,7 +158,7 @@ const Home = () => {
         </div>
       </div>
       {filteredList.length === 0 && filteredListSearch.length === 0 ? <div className="pic-no-data"><img src={'https://t4.ftcdn.net/jpg/04/75/01/23/360_F_475012363_aNqXx8CrsoTfJP5KCf1rERd6G50K0hXw.jpg'} alt='no data' /></div> : ""}
-      ;
+
       <div>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
