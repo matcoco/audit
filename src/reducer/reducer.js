@@ -16,7 +16,8 @@ import {
   LOAD_LOCALSTORAGE,
   MANAGER_FORMS_CSV,
   MANAGER_FORMS_SELECTED_DELETE,
-  MANAGER_FORMS_DELETE
+  MANAGER_FORMS_DELETE,
+  DELETE_ALL_DATAS
 } from '../reducer/ActionsType';
 
 export const initialState = [
@@ -31,18 +32,18 @@ export const initialState = [
     ],
     "settings": {
       "select": {
-        "options": ["", 'OK', 'NOK', 'INDISPONIBLE', 'MANQUANT',"NON VENDABLE", "A DEMANTELER", "VENDABLE", "NON ELIGIBLE E-COM", "ELIGIBLE E-COM"]
+        "options": ["", 'OK', 'NOK', 'INDISPONIBLE', 'MANQUANT', "NON VENDABLE", "A DEMANTELER", "VENDABLE", "NON ELIGIBLE E-COM", "ELIGIBLE E-COM"]
       },
       "allForms": [],
       "formCategorySelected": "",
-      "natureDemande" : {
+      "natureDemande": {
         "options": ["AUDIT"]
       },
       "demande": {
-        "options" : ["NON VENDABLE", "A DEMANTELER", "VENDABLE", "NON ELIGIBLE E-COM", "ELIGIBLE E-COM"]
+        "options": ["NON VENDABLE", "A DEMANTELER", "VENDABLE", "NON ELIGIBLE E-COM", "ELIGIBLE E-COM"]
       },
-      "statut" : {
-        "options": ["A TRAITER", "EN COURS","TERMINE"]
+      "statut": {
+        "options": ["A TRAITER", "EN COURS", "TERMINE"]
       }
     }
   }
@@ -71,6 +72,9 @@ export const reducer = (state = initialState, action) => {
 
     case SET_VALUE_MENU_STATUS:
       return setValueMenu(state, payload)
+
+    case DELETE_ALL_DATAS:
+      return deleteAllDatas(payload)
 
     case EDIT_AUDIT:
       return editAudit(state, payload)
@@ -136,6 +140,15 @@ export const reducer = (state = initialState, action) => {
     default:
       return state;
   }
+}
+
+const deleteAllDatas = (payload) => {
+
+  let newState = [...payload]
+  newState[0].datas = []
+  console.log(newState)
+  saveLocalStorage(newState)
+  return newState
 }
 
 const managerApplicantEdit = (payload) => {
@@ -247,7 +260,7 @@ const editAudit = (state, payload) => {
 
     newState[0].datas[position] = payload.newState
     newState[0].datas[position].audit = newObj
-    newState[0].datas = updatePourcentForm(newState, {category:payload.newState.category})
+    newState[0].datas = updatePourcentForm(newState, { category: payload.newState.category })
   }
   saveLocalStorage(newState)
   return newState
@@ -296,8 +309,8 @@ const managerCategoryDelete = (state, payload) => {
   delete newState[0].forms[`${payload.value}`]
 
   let index = 0
-  for(let data of newState[0].datas){
-    if(data.category === payload.value){
+  for (let data of newState[0].datas) {
+    if (data.category === payload.value) {
       newState[0].datas[index].audit = {}
       newState[0].datas[index].category = ""
       newState[0].datas[index].progress = 0
