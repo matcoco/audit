@@ -17,7 +17,16 @@
     display: flex;
 }
 
-.btnExport {
+.btnExport, .btn-reset{
+    margin-left: 10px;
+}
+
+.main-filter{
+    display: flex;
+    align-items: baseline;
+}
+
+.input-search{
     margin-left: 10px;
 }
 
